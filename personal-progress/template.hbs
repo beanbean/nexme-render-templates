@@ -1,186 +1,86 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
-    
-    body {
-      margin: 0; padding: 0;
-      font-family: 'Roboto', sans-serif;
-      background: #e0e5ec;
-      display: flex; justify-content: center; align-items: center;
-      height: 100vh;
-      width: 100vw;
-    }
+CREATE OR REPLACE FUNCTION get_personal_progress_card(p_user_id UUID)
+RETURNS JSONB
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_round_id UUID;
+    v_start_date DATE;
+    v_initial_weight NUMERIC;
+    v_current_weight NUMERIC;
+    v_player_name TEXT;
+    v_avatar_url TEXT;
+    v_team_name TEXT;
+    v_days_json JSONB;
+    v_result JSONB;
+    v_total_loss NUMERIC;
+BEGIN
+    -- 1. Lấy thông tin
+    SELECT r.id, r.start_date, ui.display_name, ui.avatar_url, t.name
+    INTO v_round_id, v_start_date, v_player_name, v_avatar_url, v_team_name
+    FROM rounds r
+    JOIN unified_identity ui ON ui.id = p_user_id
+    LEFT JOIN team_members tm ON tm.player_id = ui.id
+    LEFT JOIN teams t ON t.id = tm.team_id
+    WHERE r.start_date <= CURRENT_DATE AND r.end_date >= CURRENT_DATE
+    LIMIT 1;
 
-    .card {
-      width: 1080px; height: 1350px;
-      background: #e0e5ec;
-      position: relative;
-      overflow: hidden;
-      padding: 60px;
-      box-sizing: border-box;
-    }
+    IF v_round_id IS NULL THEN RETURN NULL; END IF;
 
-    /* Header */
-    .header { text-align: right; margin-bottom: 40px; color: #5a6b7c; }
-    .header h2 { margin: 0; font-size: 32px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;}
-    .header span { font-size: 24px; font-weight: 400; }
-    .status-badge { 
-      background: #76c043; color: white; padding: 5px 15px; 
-      border-radius: 20px; font-size: 18px; font-weight: bold; vertical-align: middle;
-      margin-left: 10px;
-    }
+    -- 2. Lấy cân nặng
+    SELECT initial_weight INTO v_initial_weight FROM enrollments WHERE player_id = p_user_id AND round_id = v_round_id;
+    SELECT weight INTO v_current_weight FROM daily_logs WHERE player_id = p_user_id AND round_id = v_round_id AND log_date = CURRENT_DATE;
+    v_total_loss := COALESCE(v_current_weight, v_initial_weight) - v_initial_weight;
 
-    /* Profile Section */
-    .profile { display: flex; align-items: center; margin-bottom: 50px; }
-    .avatar {
-      width: 160px; height: 160px; border-radius: 50%;
-      border: 6px solid #e0e5ec;
-      box-shadow: 9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255, 0.5);
-      object-fit: cover; margin-right: 40px;
-    }
-    .profile-info h1 { font-size: 56px; margin: 0 0 10px 0; color: #333; font-weight: 900; }
-    .profile-info p { font-size: 32px; margin: 5px 0; color: #666; font-weight: 500;}
+    -- 3. Tạo dữ liệu lưới 10 ngày (Logic Status chuẩn)
+    SELECT jsonb_agg(d) INTO v_days_json
+    FROM (
+        SELECT 
+            i as day_index,
+            'DAY ' || i as label,
+            CASE 
+                WHEN dl.weight IS NOT NULL AND prev_dl.weight IS NOT NULL 
+                THEN CAST((dl.weight - prev_dl.weight) * 1000 AS INT)
+                ELSE NULL 
+            END as value_g,
+            
+            -- Logic Status
+            CASE 
+                WHEN (v_start_date + (i - 1) * INTERVAL '1 day') > CURRENT_DATE THEN 'future' -- Ngày tương lai
+                WHEN dl.weight IS NULL THEN 'missing' -- Ngày quá khứ mà chưa nhập
+                WHEN (dl.weight - prev_dl.weight) > 0 THEN 'gain'
+                WHEN (dl.weight - prev_dl.weight) < 0 THEN 'loss'
+                ELSE 'flat'
+            END as status,
+            
+            -- Leader Logic (Tạm thời false, nâng cấp sau)
+            false as leader
 
-    /* Divider */
-    .divider { height: 4px; background: #76c043; border-radius: 3px; margin-bottom: 60px; width: 100%; opacity: 0.8; }
+        FROM generate_series(1, 10) i
+        LEFT JOIN daily_logs dl ON dl.player_id = p_user_id AND dl.round_id = v_round_id 
+            AND dl.log_date = (v_start_date + (i - 1) * INTERVAL '1 day')
+        LEFT JOIN daily_logs prev_dl ON prev_dl.player_id = p_user_id AND prev_dl.round_id = v_round_id 
+            AND prev_dl.log_date = (v_start_date + (i - 2) * INTERVAL '1 day')
+        ORDER BY i ASC
+    ) d;
 
-    /* Top Stats (Start - Finish - Result) */
-    .stats-row { display: flex; justify-content: space-between; margin-bottom: 60px; gap: 40px; }
-    .stat-box {
-      flex: 1; padding: 30px; text-align: center;
-      border-radius: 30px;
-      background: #e0e5ec;
-      box-shadow: 12px 12px 24px rgb(163,177,198,0.6), -12px -12px 24px rgba(255,255,255, 0.5);
-    }
-    .stat-val { font-size: 70px; font-weight: 900; display: block; margin-bottom: 10px; }
-    .stat-label { font-size: 28px; color: #777; text-transform: uppercase; letter-spacing: 1px;}
-    
-    /* Colors */
-    .text-orange { color: #e95420; }
-    .text-green { color: #76c043; }
-    .text-gray { color: #555; }
+    -- 4. Đóng gói JSON
+    v_result := jsonb_build_object(
+        'template', 'personal-progress/template',
+        'player', jsonb_build_object(
+            'name', v_player_name,
+            'team', COALESCE(v_team_name, 'Freelancer'),
+            'avatar', v_avatar_url,
+            'date', to_char(CURRENT_DATE, 'Month DD, YYYY')
+        ),
+        'stats', jsonb_build_object(
+            'start', v_initial_weight,
+            'finish', COALESCE(v_current_weight, v_initial_weight),
+            'result', v_total_loss,
+            'lap_number', 1 -- Hardcode Lap 1 cho MVP
+        ),
+        'days', v_days_json
+    );
 
-    /* Grid 10 Days */
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 30px;
-      margin-bottom: 60px;
-    }
-    .day-card {
-      height: 200px;
-      border-radius: 20px;
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
-      position: relative;
-      box-shadow: inset 6px 6px 12px #b8b9be, inset -6px -6px 12px #ffffff; /* Neumorphism chìm */
-      background: #e0e5ec;
-    }
-    
-    /* Status Styles */
-    .day-card.gain { 
-      background: #e95420; color: white; 
-      box-shadow: 10px 10px 20px rgb(163,177,198,0.6); 
-      border: none; 
-    }
-    .day-card.loss { 
-      background: #76c043; color: white; 
-      box-shadow: 10px 10px 20px rgb(163,177,198,0.6); 
-      border: none; 
-    }
-    .day-card.empty { color: #aaa; }
-    .day-card.flat { color: #555; }
-
-    .day-val { font-size: 48px; font-weight: bold; z-index: 2; }
-    .day-label { 
-      position: absolute; bottom: 15px; 
-      font-size: 20px; 
-      padding: 4px 12px; border-radius: 10px;
-      font-weight: 500;
-      opacity: 0.8;
-    }
-    .gain .day-label, .loss .day-label { background: rgba(255,255,255,0.2); }
-    .empty .day-label, .flat .day-label { color: #888; }
-
-    /* Footer */
-    .footer { text-align: center; margin-top: 50px; }
-    .footer-text { font-size: 32px; color: #555; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px;}
-    .footer-val-box {
-      display: inline-block; padding: 25px 80px;
-      border-radius: 25px; background: #e0e5ec;
-      box-shadow: 9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255, 0.5);
-    }
-    .footer-val { font-size: 60px; font-weight: 900; color: #e95420; }
-
-  </style>
-</head>
-<body>
-  <div class="card">
-    <div class="header">
-      <h2>WEIGHT LOSS MARATHON <span class="status-badge">ON</span></h2>
-      <span>personal progress</span>
-    </div>
-
-    <div class="profile">
-      <!-- Fallback Avatar nếu không có ảnh -->
-      {{#if player.avatar}}
-        <img src="{{player.avatar}}" class="avatar" />
-      {{else}}
-        <img src="https://ui-avatars.com/api/?name={{player.name}}&background=random&size=256" class="avatar" />
-      {{/if}}
-      
-      <div class="profile-info">
-        <h1>{{player.name}}</h1>
-        <p>{{player.team}}</p>
-        <p>{{player.date}}</p>
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="stats-row">
-      <div class="stat-box">
-        <span class="stat-val text-orange">{{stats.start}}</span>
-        <span class="stat-label">Start</span>
-      </div>
-      <div class="stat-box">
-        <span class="stat-val text-green">{{stats.finish}}</span>
-        <span class="stat-label">Current</span>
-      </div>
-      <div class="stat-box">
-        <!-- Result: Nếu số âm thì hiện màu xanh, dương màu cam -->
-        <span class="stat-val {{#if (lt stats.result 0)}}text-green{{else}}text-orange{{/if}}">
-          {{stats.result}}
-        </span>
-        <span class="stat-label">Result</span>
-      </div>
-    </div>
-
-    <div class="grid-container">
-      {{#each days}}
-        <div class="day-card {{status}}">
-          {{#if value_g}}
-            <span class="day-val">
-              {{#if (gt value_g 0)}}+{{/if}}{{value_g}}
-            </span>
-          {{else}}
-            <span class="day-val">{{#if (eq status 'flat')}}-{{else}}?{{/if}}</span>
-          {{/if}}
-          <span class="day-label">{{label}}</span>
-        </div>
-      {{/each}}
-    </div>
-
-    <div class="footer">
-      <div class="footer-text">WEIGHT CHANGE IN THIS LAP:</div>
-      <div class="footer-val-box">
-        <span class="footer-val">{{stats.result}} kg</span>
-      </div>
-    </div>
-  </div>
-</body>
-</html>
+    RETURN v_result;
+END;
+$$;
