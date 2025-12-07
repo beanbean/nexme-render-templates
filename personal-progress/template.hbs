@@ -1,86 +1,135 @@
-CREATE OR REPLACE FUNCTION get_personal_progress_card(p_user_id UUID)
-RETURNS JSONB
-LANGUAGE plpgsql
-AS $$
-DECLARE
-    v_round_id UUID;
-    v_start_date DATE;
-    v_initial_weight NUMERIC;
-    v_current_weight NUMERIC;
-    v_player_name TEXT;
-    v_avatar_url TEXT;
-    v_team_name TEXT;
-    v_days_json JSONB;
-    v_result JSONB;
-    v_total_loss NUMERIC;
-BEGIN
-    -- 1. Lấy thông tin
-    SELECT r.id, r.start_date, ui.display_name, ui.avatar_url, t.name
-    INTO v_round_id, v_start_date, v_player_name, v_avatar_url, v_team_name
-    FROM rounds r
-    JOIN unified_identity ui ON ui.id = p_user_id
-    LEFT JOIN team_members tm ON tm.player_id = ui.id
-    LEFT JOIN teams t ON t.id = tm.team_id
-    WHERE r.start_date <= CURRENT_DATE AND r.end_date >= CURRENT_DATE
-    LIMIT 1;
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1080, initial-scale=1" />
+    <style>
+      body { margin:0; font-family: "Noto Sans", Arial, sans-serif; }
+      .card { width:1080px; height:1350px; display:flex; flex-direction:column;
+              background: #0f172a; color:#fff; position:relative; }
+      .header { padding:48px; display:flex; align-items:center; justify-content:space-between; }
+      .brand { font-size:40px; font-weight:800; letter-spacing:1px; }
+      .badge { font-size:28px; padding:8px 16px; border-radius:12px; background:#16a34a; }
+      .hero { display:flex; gap:32px; padding:0 48px; align-items:center; }
+      .avatar { width:240px; height:240px; border-radius:24px; overflow:hidden; background:#111827; }
+      .avatar img { width:100%; height:100%; object-fit:cover; }
+      .info { flex:1; }
+      .name { font-size:56px; font-weight:900; line-height:1.1; }
+      .team { opacity:.85; font-size:28px; margin-top:8px; }
+      .grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:24px; padding:32px 48px; }
+      .stat { background:#111827; border-radius:16px; padding:24px; }
+      .stat .label { font-size:24px; opacity:.8; }
+      .stat .value { font-size:40px; font-weight:800; margin-top:8px; }
+      .days { padding:0 48px; display:grid; grid-template-columns: repeat(5, 1fr); gap:16px; }
+      .day { background:#0b1220; padding:16px; border-radius:12px; text-align:center; }
+      .day .dlabel { font-size:18px; opacity:.7; }
+      .day .dval { margin-top:6px; font-size:24px; font-weight:700; }
+      .footer { position:absolute; bottom:32px; left:48px; right:48px; display:flex; justify-content:space-between; align-items:center; opacity:.9; }
+      .rank { font-size:28px; font-weight:800; }
+      .medal { font-size:56px; }
+      {{#if isTop1}} .card { background: linear-gradient(135deg,#1f2937,#ca8a04 50%, #1f2937); } {{/if}}
+      {{#if isTop2}} .card { background: linear-gradient(135deg,#1f2937,#9ca3af 50%, #1f2937); } {{/if}}
+      {{#if isTop3}} .card { background: linear-gradient(135deg,#1f2937,#d97706 50%, #1f2937); } {{/if}}
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div class="card">
+      <div class="header">
+        <div class="brand">nexme marathon</div>
+        <div class="badge">Tiến trình cá nhân</div>
+      </div>
+      <div class="hero">
+        <div class="avatar">
+          {{#if avatarDataUri}}
+          <img src="{{avatarDataUri}}" alt="avatar" />
+          {{else if avatar}}
+          <img src="{{avatar}}" alt="avatar" />
+          {{else}}
+          <img src="https://placehold.co/240x240?text=No+Avatar" alt="avatar" />
+          {{/if}}
+        </div>
+        <div class="info">
+          <div class="name">{{PLAYER_NAME}}</div>
+          <div class="team">{{TEAM_NAME}} • Vòng {{LAP_NUMBER}}</div>
+          <div style="margin-top: 16px; display: flex; gap: 16px">
+            <div class="stat">
+              <div class="label">Thay đổi</div>
+              <div class="value">{{sum}}</div>
+            </div>
+            <div class="stat">
+              <div class="label">Start → Finish</div>
+              <div class="value">{{start}} → {{finish}}</div>
+            </div>
+            <div class="stat">
+              <div class="label">% Giảm</div>
+              <div class="value">{{percent}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    IF v_round_id IS NULL THEN RETURN NULL; END IF;
+      <div class="grid">
+        <div class="stat">
+          <div class="label">Ngày 1</div>
+          <div class="value">{{day_01}}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Ngày 2</div>
+          <div class="value">{{day_02}}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Ngày 3</div>
+          <div class="value">{{day_03}}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Ngày 4</div>
+          <div class="value">{{day_04}}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Ngày 5</div>
+          <div class="value">{{day_05}}</div>
+        </div>
+      </div>
 
-    -- 2. Lấy cân nặng
-    SELECT initial_weight INTO v_initial_weight FROM enrollments WHERE player_id = p_user_id AND round_id = v_round_id;
-    SELECT weight INTO v_current_weight FROM daily_logs WHERE player_id = p_user_id AND round_id = v_round_id AND log_date = CURRENT_DATE;
-    v_total_loss := COALESCE(v_current_weight, v_initial_weight) - v_initial_weight;
+      <div class="days" style="margin-top: 8px">
+        <div class="day">
+          <div class="dlabel">Ngày 6</div>
+          <div class="dval">{{day_06}}</div>
+        </div>
+        <div class="day">
+          <div class="dlabel">Ngày 7</div>
+          <div class="dval">{{day_07}}</div>
+        </div>
+        <div class="day">
+          <div class="dlabel">Ngày 8</div>
+          <div class="dval">{{day_08}}</div>
+        </div>
+        <div class="day">
+          <div class="dlabel">Ngày 9</div>
+          <div class="dval">{{day_09}}</div>
+        </div>
+        <div class="day">
+          <div class="dlabel">Ngày 10</div>
+          <div class="dval">{{day_10}}</div>
+        </div>
+      </div>
 
-    -- 3. Tạo dữ liệu lưới 10 ngày (Logic Status chuẩn)
-    SELECT jsonb_agg(d) INTO v_days_json
-    FROM (
-        SELECT 
-            i as day_index,
-            'DAY ' || i as label,
-            CASE 
-                WHEN dl.weight IS NOT NULL AND prev_dl.weight IS NOT NULL 
-                THEN CAST((dl.weight - prev_dl.weight) * 1000 AS INT)
-                ELSE NULL 
-            END as value_g,
-            
-            -- Logic Status
-            CASE 
-                WHEN (v_start_date + (i - 1) * INTERVAL '1 day') > CURRENT_DATE THEN 'future' -- Ngày tương lai
-                WHEN dl.weight IS NULL THEN 'missing' -- Ngày quá khứ mà chưa nhập
-                WHEN (dl.weight - prev_dl.weight) > 0 THEN 'gain'
-                WHEN (dl.weight - prev_dl.weight) < 0 THEN 'loss'
-                ELSE 'flat'
-            END as status,
-            
-            -- Leader Logic (Tạm thời false, nâng cấp sau)
-            false as leader
-
-        FROM generate_series(1, 10) i
-        LEFT JOIN daily_logs dl ON dl.player_id = p_user_id AND dl.round_id = v_round_id 
-            AND dl.log_date = (v_start_date + (i - 1) * INTERVAL '1 day')
-        LEFT JOIN daily_logs prev_dl ON prev_dl.player_id = p_user_id AND prev_dl.round_id = v_round_id 
-            AND prev_dl.log_date = (v_start_date + (i - 2) * INTERVAL '1 day')
-        ORDER BY i ASC
-    ) d;
-
-    -- 4. Đóng gói JSON
-    v_result := jsonb_build_object(
-        'template', 'personal-progress/template',
-        'player', jsonb_build_object(
-            'name', v_player_name,
-            'team', COALESCE(v_team_name, 'Freelancer'),
-            'avatar', v_avatar_url,
-            'date', to_char(CURRENT_DATE, 'Month DD, YYYY')
-        ),
-        'stats', jsonb_build_object(
-            'start', v_initial_weight,
-            'finish', COALESCE(v_current_weight, v_initial_weight),
-            'result', v_total_loss,
-            'lap_number', 1 -- Hardcode Lap 1 cho MVP
-        ),
-        'days', v_days_json
-    );
-
-    RETURN v_result;
-END;
-$$;
+      <div class="footer">
+        <div class="rank">Hạng: {{rank}}</div>
+        <div class="medal">
+          {{#if isTop1}}🥇{{/if}} {{#if isTop2}}🥈{{/if}} {{#if
+          isTop3}}🥉{{/if}}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
