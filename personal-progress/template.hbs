@@ -3,250 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1080, height=1444, initial-scale=1.0">
-    <title>Weight Loss Marathon Template</title>
+    <title>Progress Card</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        /* --- RESET & GLOBAL --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
+        
         body {
             width: 1080px; height: 1444px;
+            background-color: #DCDDE6; /* Màu nền tím nhạt */
             font-family: 'Roboto', sans-serif;
-            background-color: #DCDDE6;
-            display: flex; flex-direction: column; align-items: center;
-            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        /* --- HEADER --- */
-        .header {
-            width: 100%; padding: 60px 70px 30px 70px;
-            display: flex; justify-content: space-between; align-items: flex-start;
-        }
-        .header-text { text-align: right; flex-grow: 1; margin-right: 30px; color: #6D7278; }
-        .header-title { font-size: 38px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; color: #666; }
-        .header-subtitle { font-size: 34px; font-weight: 300; color: #7F848D; margin-top: 5px; }
-
-        /* Toggle Switch */
-        .toggle-switch {
-            width: 100px; height: 50px;
-            background-color: #7CB342; border-radius: 50px;
-            display: flex; align-items: center; padding: 5px;
-            position: relative; margin-top: 5px;
-        }
-        .toggle-knob {
-            width: 40px; height: 40px; background-color: white;
-            border-radius: 50%; position: absolute; right: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .toggle-text {
-            position: absolute; left: 15px; color: white;
-            font-weight: 700; font-size: 20px;
-        }
-
-        /* --- MAIN CARD --- */
         .card {
-            width: 940px; background-color: #F0F0F3;
-            border-radius: 60px; padding: 50px;
-            box-shadow: -10px -10px 30px #FFFFFF, 10px 10px 30px rgba(174, 174, 192, 0.4);
-            display: flex; flex-direction: column; align-items: center; margin-top: 20px;
-        }
-
-        /* --- USER INFO --- */
-        .user-info {
-            width: 100%; display: flex; align-items: center;
-            margin-bottom: 30px; padding-left: 20px;
-        }
-        .avatar {
-            width: 150px; height: 150px; border-radius: 50%;
-            object-fit: cover; border: 5px solid white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-right: 40px;
-        }
-        .user-details { display: flex; flex-direction: column; gap: 8px; }
-        .user-name { font-size: 42px; font-weight: 700; color: #444; }
-        .user-team, .user-lap, .user-date { font-size: 28px; color: #555; font-weight: 400; }
-
-        .separator {
-            width: 100%; height: 6px; background-color: #7CB342;
-            border-radius: 3px; margin-bottom: 50px;
-        }
-
-        /* --- TOP STATS --- */
-        .stats-row {
-            width: 100%; display: flex; justify-content: space-between; margin-bottom: 60px;
-        }
-        .stat-box {
-            width: 260px; height: 180px; background: #F0F0F3;
-            border-radius: 30px;
-            box-shadow: inset 8px 8px 16px rgba(174, 174, 192, 0.5), inset -8px -8px 16px #FFFFFF;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            width: 960px; height: 1300px; /* Co gọn lại chút cho đẹp */
+            background-color: #F0F0F3;
+            border-radius: 50px;
+            padding: 50px;
+            box-shadow: -15px -15px 30px #FFFFFF, 15px 15px 30px rgba(174, 174, 192, 0.4);
+            display: flex; flex-direction: column; align-items: center;
             position: relative;
         }
-        .stat-value { font-size: 60px; font-weight: 700; z-index: 1; }
-        .stat-label { font-size: 22px; color: #777; margin-top: 10px; font-weight: 500; z-index: 1; }
 
-        .color-orange { color: #E64A19; }
-        .color-green { color: #7CB342; }
-        .color-grey { color: #888; }
-
-        /* --- DAYS GRID --- */
-        .days-grid {
-            width: 100%; display: grid; grid-template-columns: repeat(5, 1fr);
-            gap: 25px; margin-bottom: 60px;
+        /* HEADER */
+        .header { width: 100%; display: flex; justify-content: space-between; margin-bottom: 40px; padding: 0 10px; }
+        .header-text { text-align: right; flex: 1; margin-right: 20px; }
+        .title { font-size: 32px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+        .subtitle { font-size: 36px; color: #7F848D; font-weight: 300; margin-top: 5px; }
+        
+        .badge-on {
+            background: #7CB342; color: white;
+            padding: 5px 20px; border-radius: 30px;
+            font-size: 24px; font-weight: 700; display: flex; align-items: center;
+            height: 50px; margin-top: 10px;
         }
-        .day-cell {
-            position: relative; height: 220px; border-radius: 30px;
+        .badge-on::after {
+            content: ''; width: 20px; height: 20px; background: white;
+            border-radius: 50%; margin-left: 10px;
+        }
+
+        /* PROFILE */
+        .profile { width: 100%; display: flex; align-items: center; margin-bottom: 40px; padding-left: 20px; }
+        .avatar {
+            width: 140px; height: 140px; border-radius: 50%; object-fit: cover;
+            border: 6px solid #F0F0F3;
+            box-shadow: 8px 8px 16px rgba(163,177,198,0.6), -8px -8px 16px rgba(255,255,255, 0.8);
+            margin-right: 40px;
+        }
+        .info h1 { font-size: 46px; color: #444; margin-bottom: 10px; }
+        .info p { font-size: 28px; color: #666; margin: 5px 0; }
+
+        .divider { width: 100%; height: 6px; background: #7CB342; border-radius: 3px; margin-bottom: 50px; opacity: 0.8; }
+
+        /* MAIN STATS */
+        .stats-row { width: 100%; display: flex; justify-content: space-between; margin-bottom: 50px; gap: 30px; }
+        .stat-box {
+            flex: 1; height: 180px;
+            background: #F0F0F3; border-radius: 30px;
+            box-shadow: inset 8px 8px 16px rgba(163,177,198, 0.4), inset -8px -8px 16px #FFFFFF;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
         }
+        .stat-val { font-size: 56px; font-weight: 700; margin-bottom: 10px; }
+        .stat-lbl { font-size: 24px; color: #888; font-weight: 400; }
+        .text-orange { color: #E64A19; }
+        .text-green { color: #7CB342; }
 
-        /* Trạng thái màu nền */
-        .bg-green { background: linear-gradient(135deg, #8BC34A, #689F38); } /* Giảm cân */
-        .bg-orange { background: linear-gradient(135deg, #FF7043, #E64A19); } /* Tăng cân */
-        .bg-grey { background: #E0E0E0; box-shadow: inset 5px 5px 10px rgba(0,0,0,0.05); } /* Thiếu / Flat */
-        .bg-white { background: #FFFFFF; border: 2px solid #E0E0E0; } /* Tương lai */
-
-        .day-value { font-size: 40px; font-weight: 700; color: white; margin-bottom: 25px; }
-        .day-value-null { color: #757575; }
-
-        /* Label Pill */
-        .day-label-pill {
-            position: absolute; bottom: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 5px 15px; border-radius: 20px;
-            font-size: 16px; font-weight: 700; color: #555;
-            min-width: 80px; text-align: center;
+        /* GRID DAYS */
+        .grid { width: 100%; display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-bottom: 50px; }
+        .cell {
+            height: 200px; border-radius: 20px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: relative;
+            background: #F0F0F3;
+            box-shadow: 6px 6px 12px rgba(163,177,198, 0.4), -6px -6px 12px #FFFFFF;
+        }
+        .cell.gain { background: linear-gradient(135deg, #FF7043, #E64A19); box-shadow: 10px 10px 20px rgba(230, 74, 25, 0.3); border: none; }
+        .cell.loss { background: linear-gradient(135deg, #AED581, #7CB342); box-shadow: 10px 10px 20px rgba(124, 179, 66, 0.3); border: none; }
+        
+        /* Chỉnh font size nhỏ lại nếu số quá to */
+        .cell-val { font-size: 42px; font-weight: 700; color: #555; z-index: 2; margin-bottom: 30px; }
+        .gain .cell-val, .loss .cell-val { color: white; }
+        
+        .cell-lbl {
+            position: absolute; bottom: 15px;
+            background: rgba(255,255,255,0.8);
+            padding: 4px 12px; border-radius: 10px;
+            font-size: 16px; color: #555; font-weight: 700;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* Badge */
+        /* Leader Badge */
         .badge {
-            position: absolute; top: -12px;
-            background-color: #FF9800; color: white;
-            font-size: 12px; font-weight: 900; padding: 6px 12px;
-            border-radius: 10px; text-transform: uppercase;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10;
+            position: absolute; top: -10px; 
+            background: #FF9800; color: white;
+            font-size: 11px; font-weight: 900; padding: 5px 10px;
+            border-radius: 8px; text-transform: uppercase;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 10;
         }
-        .badge-center { left: 50%; transform: translateX(-50%); width: max-content;}
 
-        /* --- FOOTER --- */
-        .footer-section {
-            display: flex; flex-direction: column; align-items: center; width: 100%;
+        /* FOOTER */
+        .footer { text-align: center; width: 100%; }
+        .footer-lbl { font-size: 26px; color: #666; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-box {
+            display: inline-block; padding: 20px 60px;
+            background: #F0F0F3; border-radius: 25px;
+            box-shadow: 10px 10px 20px rgba(163,177,198, 0.5), -10px -10px 20px #FFFFFF;
         }
-        .footer-text {
-            font-size: 28px; color: #666; margin-bottom: 20px;
-            text-transform: uppercase; font-weight: 500;
-        }
-        .total-box {
-            background-color: #FFFFFF; padding: 20px 60px;
-            border-radius: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .total-value { font-size: 55px; font-weight: 900; color: #E64A19; }
-        .text-success { color: #7CB342 !important; }
+        .footer-val { font-size: 54px; font-weight: 900; color: #E64A19; }
 
     </style>
 </head>
 <body>
-
-    <!-- SECTION 1: HEADER -->
-    <div class="header">
-        <div class="header-text">
-            <div class="header-title">MARATHON GIẢM CÂN</div>
-            <div class="header-subtitle">tiến trình cá nhân</div>
-        </div>
-        <div class="toggle-switch">
-            <span class="toggle-text">ON</span>
-            <div class="toggle-knob"></div>
-        </div>
-    </div>
-
-    <!-- SECTION 2: MAIN CARD -->
     <div class="card">
-        
-        <!-- User Info (Dynamic) -->
-        <div class="user-info">
-            <!-- Avatar có fallback -->
+        <!-- Header -->
+        <div class="header">
+            <div class="header-text">
+                <div class="title">WEIGHT LOSS MARATHON</div>
+                <div class="subtitle">personal progress</div>
+            </div>
+            <div class="badge-on">ON</div>
+        </div>
+
+        <!-- Profile -->
+        <div class="profile">
             <img src="{{#if player.avatar}}{{player.avatar}}{{else}}https://ui-avatars.com/api/?name={{player.name}}&background=random&size=256{{/if}}" class="avatar">
-            
-            <div class="user-details">
-                <div class="user-name">{{player.name}}</div>
-                <div class="user-team">Team: {{player.team}}</div>
-                <div class="user-lap">Chặng {{stats.lap_number}}</div>
-                <div class="user-date">Cập nhật: {{player.date}}</div>
+            <div class="info">
+                <h1>{{player.name}}</h1>
+                <p>{{player.team}}</p>
+                <p>Lap {{stats.lap_number}} • {{player.date}}</p>
             </div>
         </div>
 
-        <div class="separator"></div>
+        <div class="divider"></div>
 
-        <!-- Start / Finish / Result -->
+        <!-- Main Stats -->
         <div class="stats-row">
-            <!-- Start Weight -->
             <div class="stat-box">
-                <div class="stat-value color-orange">{{stats.start}}</div>
-                <div class="stat-label">Ban đầu</div>
+                <div class="stat-val text-orange">{{#if stats.start}}{{stats.start}}{{else}}?{{/if}}</div>
+                <div class="stat-lbl">Start</div>
             </div>
-            <!-- Finish (Current) Weight -->
             <div class="stat-box">
-                <div class="stat-value color-green">{{stats.finish}}</div>
-                <div class="stat-label">Hiện tại</div>
+                <div class="stat-val text-green">{{stats.finish}}</div>
+                <div class="stat-lbl">Finish</div>
             </div>
-            <!-- Result (Total Loss) -->
             <div class="stat-box">
-                <!-- Nếu giảm cân (số âm) thì màu xanh, tăng thì màu cam -->
-                <div class="stat-value {{#if (lt stats.result 0)}}color-green{{else}}color-orange{{/if}}">
-                    {{stats.result}}
+                <div class="stat-val {{#if (lt stats.result 0)}}text-green{{else}}text-orange{{/if}}">
+                    {{#if stats.start}}{{stats.result}}{{else}}?{{/if}}
                 </div>
-                <div class="stat-label">Kết quả</div>
+                <div class="stat-lbl">Result</div>
             </div>
         </div>
 
-        <!-- Days Grid (Loop) -->
-        <div class="days-grid">
+        <!-- Grid -->
+        <div class="grid">
             {{#each days}}
-            <div class="day-cell 
-                {{#if (eq status 'loss')}}bg-green{{/if}} 
-                {{#if (eq status 'gain')}}bg-orange{{/if}}
-                {{#if (eq status 'missing')}}bg-grey{{/if}}
-                {{#if (eq status 'flat')}}bg-grey{{/if}}
-                {{#if (eq status 'future')}}bg-white{{/if}}
-            ">
-                <!-- Leader Badge -->
-                {{#if leader}}
-                    <div class="badge badge-center">{{leader}}</div>
-                {{/if}}
-
-                <!-- Value Display Logic -->
-                {{#if (eq status 'future')}}
-                    <!-- Ngày tương lai: Trống -->
-                    <div class="day-value" style="color: #ccc">...</div>
-                {{else}}
-                    {{#if (eq status 'missing')}}
-                        <!-- Ngày thiếu: Dấu ? -->
-                        <div class="day-value day-value-null">?</div>
+            <div class="cell {{status}}">
+                {{#if leader}}<div class="badge" style="left:50%; transform:translateX(-50%)">{{leader}}</div>{{/if}}
+                
+                <div class="cell-val">
+                    {{#if (eq status 'future')}}
+                        <span style="color:transparent">.</span>
                     {{else}}
-                        <!-- Có số liệu -->
-                        <div class="day-value">
+                        {{#if (eq status 'missing')}}?{{else}}
                             {{#if (gt value_g 0)}}+{{/if}}{{value_g}}
-                        </div>
+                        {{/if}}
                     {{/if}}
-                {{/if}}
-
-                <!-- Label: DAY X -->
-                <div class="day-label-pill">{{label}}</div>
+                </div>
+                <div class="cell-lbl">{{label}}</div>
             </div>
             {{/each}}
         </div>
 
-        <!-- Footer Total -->
-        <div class="footer-section">
-            <div class="footer-text">THAY ĐỔI CÂN NẶNG TRONG CHẶNG NÀY:</div>
-            <div class="total-box">
-                <div class="total-value {{#if (lt stats.result 0)}}text-success{{/if}}">
-                    {{stats.result}} kg
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-lbl">WEIGHT CHANGE IN THIS LAP:</div>
+            <div class="footer-box">
+                <div class="footer-val {{#if (lt stats.result 0)}}text-green{{/if}}">
+                    {{#if stats.start}}{{stats.result}} kg{{else}}...{{/if}}
                 </div>
             </div>
         </div>
-
     </div>
-
 </body>
 </html>
