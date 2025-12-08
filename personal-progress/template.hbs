@@ -64,24 +64,20 @@
             box-shadow: inset 8px 8px 16px rgba(163,177,198, 0.4), inset -8px -8px 16px #FFFFFF;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
+        .stat-value { font-size: 56px; font-weight: 700; margin-bottom: 10px; }
         
-        /* 🔥 ĐÃ SỬA: Dùng class .stat-value thay vì .stat-val để khớp HTML */
-        .stat-value { 
-            font-size: 60px; /* Số to, rõ ràng */
-            font-weight: 700; 
-            margin-bottom: 10px; 
-            line-height: 1.2;
-        }
-        
+        /* 🔥 SIZE CHỮ TO (34px) */
         .stat-label { 
-            font-size: 28px; /* Chữ label to vừa phải */
-            color: #666; 
-            font-weight: 500; 
+            font-size: 34px !important; 
+            color: #555 !important; 
+            font-weight: 700 !important; 
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .text-orange { color: #E64A19; }
         .text-green { color: #7CB342; }
+        .text-grey { color: #888; } /* Màu xám cho dấu hỏi */
 
         /* GRID DAYS */
         .grid { width: 100%; display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-bottom: 50px; }
@@ -129,7 +125,6 @@
 </head>
 <body>
     <div class="card">
-        <!-- Header -->
         <div class="header">
             <div class="header-text">
                 <div class="title">MARATHON GIẢM CÂN</div>
@@ -138,7 +133,6 @@
             <div class="badge-on">ON</div>
         </div>
 
-        <!-- Profile -->
         <div class="profile">
             <img src="{{#if player.avatar}}{{player.avatar}}{{else}}https://ui-avatars.com/api/?name={{player.name}}&background=random&size=256{{/if}}" class="avatar">
             <div class="info">
@@ -152,20 +146,24 @@
 
         <!-- Main Stats -->
         <div class="stats-row">
-            <!-- START -->
+            <!-- BẮT ĐẦU -->
             <div class="stat-box">
                 <div class="stat-value text-orange">{{#if stats.start}}{{stats.start}}{{else}}?{{/if}}</div>
                 <div class="stat-label">BẮT ĐẦU</div>
             </div>
-            <!-- FINISH -->
+            <!-- VỀ ĐÍCH -->
             <div class="stat-box">
-                <div class="stat-value text-green">{{stats.finish}}</div>
+                <!-- Nếu chưa finish thì hiện dấu ? màu xám -->
+                <div class="stat-value {{#if stats.finish}}text-green{{else}}text-grey{{/if}}">
+                    {{#if stats.finish}}{{stats.finish}}{{else}}?{{/if}}
+                </div>
                 <div class="stat-label">VỀ ĐÍCH</div>
             </div>
-            <!-- RESULT -->
+            <!-- KẾT QUẢ -->
             <div class="stat-box">
-                <div class="stat-value {{#if (lt stats.result 0)}}text-green{{else}}text-orange{{/if}}">
-                    {{#if stats.start}}{{stats.result}}{{else}}?{{/if}}
+                <!-- Nếu chưa có result thì hiện dấu ? màu xám -->
+                <div class="stat-value {{#if stats.result}}{{#if (lt stats.result 0)}}text-green{{else}}text-orange{{/if}}{{else}}text-grey{{/if}}">
+                    {{#if stats.result}}{{stats.result}}{{else}}?{{/if}}
                 </div>
                 <div class="stat-label">KẾT QUẢ</div>
             </div>
@@ -195,8 +193,9 @@
         <div class="footer">
             <div class="footer-lbl">CÂN NẶNG THAY ĐỔI TRONG VÒNG NÀY:</div>
             <div class="footer-box">
-                <div class="footer-val {{#if (lt stats.result 0)}}text-green{{/if}}">
-                    {{#if stats.start}}{{stats.result}} kg{{else}}...{{/if}}
+                <!-- Footer vẫn hiện tiến độ hiện tại để động viên -->
+                <div class="footer-val {{#if (lt stats.current_change 0)}}text-green{{/if}}">
+                    {{#if stats.start}}{{stats.current_change}} kg{{else}}...{{/if}}
                 </div>
             </div>
         </div>
