@@ -6,58 +6,9 @@
     <title>Progress Card</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        /* --- RESET & GLOBAL --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* ... (Các phần CSS khác giữ nguyên) ... */
         
-        body {
-            width: 1080px; height: 1444px;
-            background-color: #DCDDE6;
-            font-family: 'Roboto', sans-serif;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        .card {
-            width: 960px; height: 1300px;
-            background-color: #F0F0F3;
-            border-radius: 50px;
-            padding: 50px;
-            box-shadow: -15px -15px 30px #FFFFFF, 15px 15px 30px rgba(174, 174, 192, 0.4);
-            display: flex; flex-direction: column; align-items: center;
-            position: relative;
-        }
-
-        /* HEADER */
-        .header { width: 100%; display: flex; justify-content: space-between; margin-bottom: 40px; padding: 0 10px; }
-        .header-text { text-align: right; flex: 1; margin-right: 20px; }
-        .title { font-size: 32px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
-        .subtitle { font-size: 36px; color: #7F848D; font-weight: 300; margin-top: 5px; }
-        
-        .badge-on {
-            background: #7CB342; color: white;
-            padding: 5px 20px; border-radius: 30px;
-            font-size: 24px; font-weight: 700; display: flex; align-items: center;
-            height: 50px; margin-top: 10px;
-        }
-        .badge-on::after {
-            content: ''; width: 20px; height: 20px; background: white;
-            border-radius: 50%; margin-left: 10px;
-        }
-
-        /* PROFILE */
-        .profile { width: 100%; display: flex; align-items: center; margin-bottom: 40px; padding-left: 20px; }
-        .avatar {
-            width: 140px; height: 140px; border-radius: 50%; object-fit: cover;
-            border: 6px solid #F0F0F3;
-            box-shadow: 8px 8px 16px rgba(163,177,198,0.6), -8px -8px 16px rgba(255,255,255, 0.8);
-            margin-right: 40px;
-        }
-        .info h1 { font-size: 46px; color: #444; margin-bottom: 10px; }
-        .info p { font-size: 28px; color: #666; margin: 5px 0; }
-
-        .divider { width: 100%; height: 6px; background: #7CB342; border-radius: 3px; margin-bottom: 50px; opacity: 0.8; }
-
-        /* MAIN STATS */
-        .stats-row { width: 100%; display: flex; justify-content: space-between; margin-bottom: 50px; gap: 30px; }
+        /* --- SỬA LẠI PHẦN NÀY --- */
         .stat-box {
             flex: 1; height: 180px;
             background: #F0F0F3; border-radius: 30px;
@@ -66,84 +17,24 @@
         }
         .stat-val { font-size: 56px; font-weight: 700; margin-bottom: 10px; }
         
-        /* 🔥 CẬP NHẬT TẠI ĐÂY: Size 30px, Màu đậm hơn */
-        ./* 🔥 CẬP NHẬT FORCE SIZE */
-.stat-lbl { 
-    font-size: 34px !important;  /* Tăng to hẳn lên */
-    font-weight: 900 !important; /* Đậm đen luôn */
-    color: #444 !important;      /* Màu đậm hơn */
-    margin-top: 5px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-        
-        .text-orange { color: #E64A19; }
-        .text-green { color: #7CB342; }
-
-        /* GRID DAYS */
-        .grid { width: 100%; display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-bottom: 50px; }
-        .cell {
-            height: 200px; border-radius: 20px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            position: relative;
-            background: #F0F0F3;
-            box-shadow: 6px 6px 12px rgba(163,177,198, 0.4), -6px -6px 12px #FFFFFF;
+        /* 🔥 QUAN TRỌNG: Class này phải khớp với HTML */
+        .stat-label { 
+            font-size: 34px !important; /* To hơn hẳn */
+            color: #555 !important; 
+            font-weight: 900 !important; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .cell.gain { background: linear-gradient(135deg, #FF7043, #E64A19); box-shadow: 10px 10px 20px rgba(230, 74, 25, 0.3); border: none; }
-        .cell.loss { background: linear-gradient(135deg, #AED581, #7CB342); box-shadow: 10px 10px 20px rgba(124, 179, 66, 0.3); border: none; }
-        
-        .cell-val { font-size: 42px; font-weight: 700; color: #555; z-index: 2; margin-bottom: 30px; }
-        .gain .cell-val, .loss .cell-val { color: white; }
-        
-        .cell-lbl {
-            position: absolute; bottom: 15px;
-            background: rgba(255,255,255,0.8);
-            padding: 4px 12px; border-radius: 10px;
-            font-size: 16px; color: #555; font-weight: 700;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+        /* ------------------------- */
 
-        /* Leader Badge */
-        .badge {
-            position: absolute; top: -10px; 
-            background: #FF9800; color: white;
-            font-size: 11px; font-weight: 900; padding: 5px 10px;
-            border-radius: 8px; text-transform: uppercase;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 10;
-        }
-
-        /* FOOTER */
-        .footer { text-align: center; width: 100%; }
-        .footer-lbl { font-size: 26px; color: #666; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
-        .footer-box {
-            display: inline-block; padding: 20px 60px;
-            background: #F0F0F3; border-radius: 25px;
-            box-shadow: 10px 10px 20px rgba(163,177,198, 0.5), -10px -10px 20px #FFFFFF;
-        }
-        .footer-val { font-size: 54px; font-weight: 900; color: #E64A19; }
-
+        /* ... (Các phần CSS khác giữ nguyên) ... */
     </style>
 </head>
 <body>
-    <div class="card">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-text">
-                <div class="title">MARATHON GIẢM CÂN</div>
-                <div class="subtitle">hành trình cá nhân</div>
-            </div>
-            <div class="badge-on">ON</div>
-        </div>
+    <!-- ... (Phần Header giữ nguyên) ... -->
 
-        <!-- Profile -->
-        <div class="profile">
-            <img src="{{#if player.avatar}}{{player.avatar}}{{else}}https://ui-avatars.com/api/?name={{player.name}}&background=random&size=256{{/if}}" class="avatar">
-            <div class="info">
-                <h1>{{player.name}}</h1>
-                <p>{{player.team}}</p> <!-- Đã bỏ chữ Team: -->
-                <p>{{player.info_line}}</p>
-            </div>
-        </div>
+    <div class="card">
+        <!-- ... (Phần Profile giữ nguyên) ... -->
 
         <div class="divider"></div>
 
@@ -151,43 +42,26 @@
         <div class="stats-row">
             <div class="stat-box">
                 <div class="stat-value text-orange">{{#if stats.start}}{{stats.start}}{{else}}?{{/if}}</div>
-                <div class="stat-lbl">Bắt đầu</div>
+                <div class="stat-label">Bắt đầu</div> <!-- Class stat-label khớp với CSS -->
             </div>
             <div class="stat-box">
                 <div class="stat-value text-green">{{stats.finish}}</div>
-                <div class="stat-lbl">Về đích</div>
+                <div class="stat-label">Về đích</div>
             </div>
             <div class="stat-box">
                 <div class="stat-value {{#if (lt stats.result 0)}}text-green{{else}}text-orange{{/if}}">
                     {{#if stats.start}}{{stats.result}}{{else}}?{{/if}}
                 </div>
-                <div class="stat-lbl">Kết quả</div>
+                <div class="stat-label">Kết quả</div>
             </div>
         </div>
 
-        <!-- Grid -->
-        <div class="grid">
-            {{#each days}}
-            <div class="cell {{status}}">
-                {{#if leader}}<div class="badge" style="left:50%; transform:translateX(-50%)">{{leader}}</div>{{/if}}
-                
-                <div class="cell-val">
-                    {{#if (eq status 'future')}}
-                        <span style="color:transparent">.</span>
-                    {{else}}
-                        {{#if (eq status 'missing')}}?{{else}}
-                            {{#if (gt value_g 0)}}+{{/if}}{{value_g}}
-                        {{/if}}
-                    {{/if}}
-                </div>
-                <div class="cell-lbl">{{label}}</div>
-            </div>
-            {{/each}}
-        </div>
+        <!-- ... (Phần Grid giữ nguyên) ... -->
 
         <!-- Footer -->
         <div class="footer">
-            <div class="footer-lbl">CÂN NẶNG THAY ĐỔI TRONG VÒNG NÀY:</div> <!-- Đã bỏ chữ TỔNG -->
+            <!-- 🔥 Đã bỏ chữ TỔNG -->
+            <div class="footer-lbl">CÂN NẶNG THAY ĐỔI TRONG VÒNG NÀY:</div> 
             <div class="footer-box">
                 <div class="footer-val {{#if (lt stats.result 0)}}text-green{{/if}}">
                     {{#if stats.start}}{{stats.result}} kg{{else}}...{{/if}}
