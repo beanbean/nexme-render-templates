@@ -6,6 +6,7 @@
     <title>Progress Card</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
+        /* --- RESET & GLOBAL --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
@@ -64,7 +65,10 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
         .stat-val { font-size: 56px; font-weight: 700; margin-bottom: 10px; }
-        .stat-lbl { font-size: 24px; color: #888; font-weight: 400; }
+        
+        /* 🔥 CẬP NHẬT FONT SIZE LABEL (To hơn Ngày 1) */
+        .stat-lbl { font-size: 28px; color: #888; font-weight: 500; }
+        
         .text-orange { color: #E64A19; }
         .text-green { color: #7CB342; }
 
@@ -102,6 +106,7 @@
 
         /* FOOTER */
         .footer { text-align: center; width: 100%; }
+        /* 🔥 CẬP NHẬT TEXT FOOTER */
         .footer-lbl { font-size: 26px; color: #666; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
         .footer-box {
             display: inline-block; padding: 20px 60px;
@@ -128,8 +133,9 @@
             <img src="{{#if player.avatar}}{{player.avatar}}{{else}}https://ui-avatars.com/api/?name={{player.name}}&background=random&size=256{{/if}}" class="avatar">
             <div class="info">
                 <h1>{{player.name}}</h1>
-                <p>Team: {{player.team}}</p>
-                <p>{{player.info_line}}</p> <!-- 🔥 Đã cập nhật dòng này -->
+                <!-- 🔥 BỎ CHỮ 'TEAM:' -->
+                <p>{{player.team}}</p>
+                <p>{{player.info_line}}</p>
             </div>
         </div>
 
@@ -139,17 +145,17 @@
         <div class="stats-row">
             <div class="stat-box">
                 <div class="stat-value text-orange">{{#if stats.start}}{{stats.start}}{{else}}?{{/if}}</div>
-                <div class="stat-lbl">Bắt đầu</div> <!-- 🔥 Việt hóa -->
+                <div class="stat-lbl">Bắt đầu</div> <!-- Font 28px Bold -->
             </div>
             <div class="stat-box">
                 <div class="stat-value text-green">{{stats.finish}}</div>
-                <div class="stat-lbl">Về đích</div> <!-- 🔥 Việt hóa -->
+                <div class="stat-lbl">Về đích</div>
             </div>
             <div class="stat-box">
                 <div class="stat-value {{#if (lt stats.result 0)}}text-green{{else}}text-orange{{/if}}">
                     {{#if stats.start}}{{stats.result}}{{else}}?{{/if}}
                 </div>
-                <div class="stat-lbl">Kết quả</div> <!-- 🔥 Việt hóa -->
+                <div class="stat-lbl">Kết quả</div>
             </div>
         </div>
 
@@ -175,7 +181,8 @@
 
         <!-- Footer -->
         <div class="footer">
-            <div class="footer-lbl">TỔNG CÂN NẶNG THAY ĐỔI TRONG VÒNG NÀY:</div>
+            <!-- 🔥 BỎ CHỮ 'TỔNG' -->
+            <div class="footer-lbl">CÂN NẶNG THAY ĐỔI TRONG VÒNG NÀY:</div>
             <div class="footer-box">
                 <div class="footer-val {{#if (lt stats.result 0)}}text-green{{/if}}">
                     {{#if stats.start}}{{stats.result}} kg{{else}}...{{/if}}
