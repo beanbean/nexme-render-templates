@@ -10,13 +10,13 @@
         
         body {
             width: 1080px; height: 1444px;
-            background-color: #DCDDE6; /* Màu nền tím nhạt */
+            background-color: #DCDDE6;
             font-family: 'Roboto', sans-serif;
             display: flex; justify-content: center; align-items: center;
         }
 
         .card {
-            width: 960px; height: 1300px; /* Co gọn lại chút cho đẹp */
+            width: 960px; height: 1300px;
             background-color: #F0F0F3;
             border-radius: 50px;
             padding: 50px;
@@ -80,7 +80,6 @@
         .cell.gain { background: linear-gradient(135deg, #FF7043, #E64A19); box-shadow: 10px 10px 20px rgba(230, 74, 25, 0.3); border: none; }
         .cell.loss { background: linear-gradient(135deg, #AED581, #7CB342); box-shadow: 10px 10px 20px rgba(124, 179, 66, 0.3); border: none; }
         
-        /* Chỉnh font size nhỏ lại nếu số quá to */
         .cell-val { font-size: 42px; font-weight: 700; color: #555; z-index: 2; margin-bottom: 30px; }
         .gain .cell-val, .loss .cell-val { color: white; }
         
@@ -129,8 +128,8 @@
             <img src="{{#if player.avatar}}{{player.avatar}}{{else}}https://ui-avatars.com/api/?name={{player.name}}&background=random&size=256{{/if}}" class="avatar">
             <div class="info">
                 <h1>{{player.name}}</h1>
-                <p>{{player.team}}</p>
-                <p>Vòng đấu: {{stats.lap_number}} • {{player.date}}</p>
+                <p>Team: {{player.team}}</p>
+                <p>{{player.info_line}}</p> <!-- 🔥 Đã cập nhật dòng này -->
             </div>
         </div>
 
@@ -139,18 +138,18 @@
         <!-- Main Stats -->
         <div class="stats-row">
             <div class="stat-box">
-                <div class="stat-val text-orange">{{#if stats.start}}{{stats.start}}{{else}}?{{/if}}</div>
-                <div class="stat-lbl">Start</div>
+                <div class="stat-value text-orange">{{#if stats.start}}{{stats.start}}{{else}}?{{/if}}</div>
+                <div class="stat-lbl">Bắt đầu</div> <!-- 🔥 Việt hóa -->
             </div>
             <div class="stat-box">
-                <div class="stat-val text-green">{{stats.finish}}</div>
-                <div class="stat-lbl">Finish</div>
+                <div class="stat-value text-green">{{stats.finish}}</div>
+                <div class="stat-lbl">Về đích</div> <!-- 🔥 Việt hóa -->
             </div>
             <div class="stat-box">
-                <div class="stat-val {{#if (lt stats.result 0)}}text-green{{else}}text-orange{{/if}}">
+                <div class="stat-value {{#if (lt stats.result 0)}}text-green{{else}}text-orange{{/if}}">
                     {{#if stats.start}}{{stats.result}}{{else}}?{{/if}}
                 </div>
-                <div class="stat-lbl">Result</div>
+                <div class="stat-lbl">Kết quả</div> <!-- 🔥 Việt hóa -->
             </div>
         </div>
 
