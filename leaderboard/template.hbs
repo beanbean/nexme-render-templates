@@ -48,10 +48,13 @@
             object-fit: cover; border: 4px solid #fff; 
             box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
         }
+        
+        /* 🔥 CROWN FIX: Dùng ảnh PNG thay vì Emoji */
         .crown {
-            position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
-            font-size: 40px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
+            width: 50px; height: auto; /* Kích thước ảnh vương miện */
             animation: float 2s ease-in-out infinite;
+            z-index: 10;
         }
 
         /* Info */
@@ -75,7 +78,7 @@
         }
         .footer strong { color: #7CB342; font-weight: 900; font-size: 32px; }
 
-        @keyframes float { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -5px); } }
+        @keyframes float { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -8px); } }
     </style>
 </head>
 <body>
@@ -90,17 +93,17 @@
             {{#each leaderboard}}
             <div class="item {{#if (eq @index 0)}}top-1{{/if}} {{#if (eq @index 1)}}top-2{{/if}} {{#if (eq @index 2)}}top-3{{/if}}">
                 
-                <!-- 1. RANK -->
                 <div class="rank">#{{add @index 1}}</div>
                 
-                <!-- 2. AVATAR & CROWN -->
                 <div class="avatar-container">
-                    {{#if (eq @index 0)}}<div class="crown">👑</div>{{/if}}
-                    <!-- Dùng fallback UI Avatar nếu không có ảnh thật -->
+                    <!-- 🔥 Dùng ảnh Vương miện -->
+                    {{#if (eq @index 0)}}
+                        <img src="https://img.icons8.com/fluency/96/crown.png" class="crown">
+                    {{/if}}
+                    
                     <img src="{{#if avatar}}{{avatar}}{{else}}https://ui-avatars.com/api/?name={{name}}&background=random&size=128{{/if}}" class="avatar">
                 </div>
 
-                <!-- 3. NAME -->
                 <div class="info">
                     <div class="name">
                         {{name}}
@@ -108,7 +111,6 @@
                     </div>
                 </div>
 
-                <!-- 4. STATS -->
                 <div class="stats">
                     <div class="lost">-{{total_lost}} kg</div>
                     <div class="points">{{points}} điểm</div>
@@ -118,7 +120,7 @@
         </div>
 
         <div class="footer">
-            Hôm nay đội mình giảm trung bình: <strong>{{team_health.avg_weight_lost}} kg/người</strong>
+            Tổng cân nặng đội mình giảm: <strong>{{team_health.total_weight_lost}} kg</strong>
         </div>
     </div>
 </body>
