@@ -1,49 +1,67 @@
-
-<!doctype html>
-<html>
-  <link rel="preload" as="image" href="{{avatar}}">
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <title>Daily Leader</title>
-  <style>
-    :root{
-      --bg1:#f29963; --bg2:#e27f55;
-      --text:#1f2937; --muted:#111827; --card:#fff;
-      --shadow:0 20px 50px rgba(2,6,23,.18);
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;width:1080px;height:1600px;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue","Noto Sans",Arial}
-    body{
-      background: radial-gradient(1400px 1400px at 15% 0%, var(--bg1), var(--bg2) 65%);
-      color:var(--text);
-      display:flex; align-items:center; justify-content:center;
-    }
-    .wrap{width:920px; text-align:center}
-    .title{color:#fff; text-transform:uppercase; font-weight:800; letter-spacing:3px; font-size:58px; margin:0 0 12px; text-shadow:0 6px 18px rgba(0,0,0,.25)}
-    .subtitle{color:#fff; font-size:88px; font-weight:900; letter-spacing:1px; margin:0 0 34px}
-    .badge{
-      background:#fff; border-radius:42px; padding:38px 40px 44px; box-shadow:var(--shadow);
-      display:flex; flex-direction:column; align-items:center; gap:18px
-    }
-    .avatar{width:350px; height:350px; border-radius:34px; overflow:hidden; box-shadow:0 16px 40px rgba(2,6,23,.25); border:10px solid #fff}
-    .avatar img{width:100%;height:100%;object-fit:cover}
-    .name{font-size:72px; font-weight:800; color:#111827}
-    .info{font-size:40px; color:#111827; opacity:.85}
-    .foot{color:#fff; font-size:48px; margin-top:70px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1080px; height: 1600px; background: #DCDDE6; font-family: 'Roboto', sans-serif; display: flex; justify-content: center; align-items: center; }
+        .card { width: 980px; height: 1500px; background: #F0F0F3; border-radius: 40px; padding: 40px; box-shadow: -10px -10px 30px #FFFFFF, 10px 10px 30px rgba(174, 174, 192, 0.4); position: relative; display: flex; flex-direction: column; }
+        
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 32px; color: #888; letter-spacing: 2px; text-transform: uppercase; }
+        .team-name { font-size: 60px; color: #444; font-weight: 900; margin: 10px 0; text-transform: uppercase; color: #E64A19; }
+        .date { font-size: 28px; color: #7CB342; font-weight: 500; }
+
+        .list { flex: 1; display: flex; flex-direction: column; gap: 25px; }
+        .item { display: flex; align-items: center; background: #F0F0F3; padding: 25px 40px; border-radius: 25px; box-shadow: 6px 6px 12px rgba(163,177,198, 0.3), -6px -6px 12px #FFFFFF; }
+        
+        /* Top 3 Highlighting */
+        .item.top-1 { border-left: 15px solid #FFD700; }
+        .item.top-2 { border-left: 15px solid #C0C0C0; }
+        .item.top-3 { border-left: 15px solid #CD7F32; }
+
+        .rank { font-size: 40px; font-weight: 900; color: #888; width: 80px; }
+        .top-1 .rank { color: #FFD700; font-size: 50px; }
+        
+        .info { flex: 1; }
+        .name { font-size: 36px; color: #444; font-weight: 700; }
+        
+        .stats { text-align: right; }
+        .lost { font-size: 42px; color: #7CB342; font-weight: 900; }
+        .points { font-size: 24px; color: #888; margin-top: 5px; }
+
+        .footer { margin-top: 40px; text-align: center; color: #888; font-size: 24px; }
+    </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="title">MARATHON WELLNESS SCORE</div>
-    <div class="subtitle">DAILY LEADER</div>
+    <div class="card">
+        <div class="header">
+            <div class="title">BẢNG XẾP HẠNG NGÀY {{round_config.day_index}}</div>
+            <div class="team-name">{{player.team}}</div>
+            <div class="date">Round: {{round_config.name}}</div>
+        </div>
 
-    <div class="badge">
-      <div class="avatar"><img src="{{avatar}}" /></div>
-      <div class="name">{{name}}</div>
-      <div class="info">Team {{team}}, Lap {{lap}}, Day {{day}}</div>
+        <div class="list">
+            {{#each leaderboard}}
+            <div class="item {{#if (eq @index 0)}}top-1{{/if}} {{#if (eq @index 1)}}top-2{{/if}} {{#if (eq @index 2)}}top-3{{/if}}">
+                <div class="rank">#{{add @index 1}}</div> <!-- Cần helper add -->
+                <div class="info">
+                    <div class="name">{{name}}{{#if is_me}} (Bạn){{/if}}</div>
+                </div>
+                <div class="stats">
+                    <div class="lost">-{{total_lost}} kg</div>
+                    <div class="points">{{points}} điểm</div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+
+        <div class="footer">
+            Keep fighting! 🔥
+        </div>
     </div>
-
-    <div class="foot">Stars for this day {{stars}}</div>
-  </div>
 </body>
 </html>
