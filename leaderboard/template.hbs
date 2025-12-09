@@ -26,59 +26,64 @@
         .list { flex: 1; display: flex; flex-direction: column; gap: 20px; overflow: hidden; }
         .item { 
             display: flex; align-items: center; 
-            background: #F0F0F3; padding: 20px 30px; 
+            background: #F0F0F3; padding: 15px 30px; /* Giảm padding một chút cho gọn */
             border-radius: 25px; 
             box-shadow: 6px 6px 12px rgba(163,177,198, 0.3), -6px -6px 12px #FFFFFF; 
             border-left: 10px solid transparent;
         }
         
-        /* Rank Styles */
-        .rank { font-size: 36px; font-weight: 900; color: #888; width: 60px; text-align: center; margin-right: 10px; }
-        
         /* Top 3 Colors */
-        .item.top-1 { border-left-color: #FFD700; background: linear-gradient(90deg, #fff9c4 0%, #F0F0F3 100%); }
+        .item.top-1 { border-left-color: #FFD700; background: linear-gradient(90deg, #fffde7 0%, #F0F0F3 100%); }
         .item.top-2 { border-left-color: #C0C0C0; }
         .item.top-3 { border-left-color: #CD7F32; }
+
+        /* 1. RANK */
+        .rank { font-size: 36px; font-weight: 900; color: #888; width: 50px; text-align: center; margin-right: 15px; }
         .top-1 .rank { color: #FFBC00; font-size: 48px; }
 
-        /* Avatar */
-        .avatar-container { position: relative; margin-right: 25px; }
+        /* 2. AVATAR (Tròn, nổi) */
         .avatar { 
-            width: 90px; height: 90px; border-radius: 50%; 
-            object-fit: cover; border: 4px solid #fff; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
-        }
-        
-        /* 🔥 CROWN FIX: Dùng ảnh PNG thay vì Emoji */
-        .crown {
-            position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
-            width: 50px; height: auto; /* Kích thước ảnh vương miện */
-            animation: float 2s ease-in-out infinite;
-            z-index: 10;
+            width: 80px; height: 80px; border-radius: 50%; 
+            object-fit: cover; border: 3px solid #fff; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            margin-right: 15px;
         }
 
-        /* Info */
-        .info { flex: 1; }
-        .name { font-size: 34px; color: #444; font-weight: 700; display: flex; align-items: center; }
-        .me-tag { 
-            font-size: 18px; background: #7CB342; color: white; 
-            padding: 2px 10px; border-radius: 10px; margin-left: 10px; font-weight: 500; 
+        /* 3. BADGES (Khu vực chứa Icon Vương miện...) */
+        .badges {
+            display: flex; align-items: center; gap: 10px;
+            margin-right: 15px;
+            min-width: 0; /* Để flex không bị vỡ */
         }
-        
-        /* Stats */
-        .stats { text-align: right; }
+        .icon-badge {
+            width: 45px; height: 45px; object-fit: contain;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        /* 4. INFO (Tên) */
+        .info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .name { font-size: 32px; color: #444; font-weight: 700; line-height: 1.2; }
+        .me-tag { 
+            display: inline-block; font-size: 16px; background: #7CB342; color: white; 
+            padding: 2px 8px; border-radius: 8px; margin-left: 8px; vertical-align: middle; 
+            font-weight: 500; transform: translateY(-2px);
+        }
+
+        /* 5. STATS */
+        .stats { text-align: right; min-width: 140px; }
         .lost { font-size: 38px; color: #E64A19; font-weight: 900; }
-        .points { font-size: 22px; color: #888; }
+        .points { font-size: 20px; color: #888; margin-top: 2px; }
 
         /* FOOTER */
         .footer { 
-            margin-top: 30px; padding-top: 20px;
+            margin-top: 20px; padding-top: 20px;
             border-top: 2px dashed #ccc;
             text-align: center; color: #555; font-size: 28px; font-weight: 500; 
         }
         .footer strong { color: #7CB342; font-weight: 900; font-size: 32px; }
 
-        @keyframes float { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -8px); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
     </style>
 </head>
 <body>
@@ -93,17 +98,25 @@
             {{#each leaderboard}}
             <div class="item {{#if (eq @index 0)}}top-1{{/if}} {{#if (eq @index 1)}}top-2{{/if}} {{#if (eq @index 2)}}top-3{{/if}}">
                 
+                <!-- 1. RANK -->
                 <div class="rank">#{{add @index 1}}</div>
                 
-                <div class="avatar-container">
-                    <!-- 🔥 Dùng ảnh Vương miện -->
+                <!-- 2. AVATAR -->
+                <img src="{{#if avatar}}{{avatar}}{{else}}https://ui-avatars.com/api/?name={{name}}&background=random&size=128{{/if}}" class="avatar">
+
+                <!-- 3. BADGES AREA (Giữa Avatar & Tên) -->
+                <div class="badges">
+                    <!-- Top 1: Vương miện -->
                     {{#if (eq @index 0)}}
-                        <img src="https://img.icons8.com/fluency/96/crown.png" class="crown">
+                        <img src="https://img.icons8.com/fluency/96/crown.png" class="icon-badge">
                     {{/if}}
                     
-                    <img src="{{#if avatar}}{{avatar}}{{else}}https://ui-avatars.com/api/?name={{name}}&background=random&size=128{{/if}}" class="avatar">
+                    <!-- Sau này thêm icon khác vào đây:
+                    <img src="..." class="icon-badge"> 
+                    -->
                 </div>
 
+                <!-- 4. NAME -->
                 <div class="info">
                     <div class="name">
                         {{name}}
@@ -111,6 +124,7 @@
                     </div>
                 </div>
 
+                <!-- 5. STATS -->
                 <div class="stats">
                     <div class="lost">-{{total_lost}} kg</div>
                     <div class="points">{{points}} điểm</div>
