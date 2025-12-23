@@ -149,8 +149,8 @@
         <div class="header-row">
             <div></div>
             <div style="text-align:right">
-                <div class="header-title">WEIGHT LOSS MARATHON</div>
-                <div style="font-size:24px; color:#999; font-weight:300;">personal progress</div>
+                <div class="header-title">NEXME MARATHON</div>
+                <div style="font-size:24px; color:#999; font-weight:300;">tiến trình cá nhân</div>
             </div>
             <div class="toggle-on"><span class="toggle-text">ON</span></div>
         </div>
@@ -172,7 +172,7 @@
             <!-- 1. BẮT ĐẦU: Luôn hiện -->
             <div class="stat-box">
                 <div class="stat-val c-orange">{{formatWeight stats.start_weight}}</div>
-                <div class="stat-lbl">Start</div>
+                <div class="stat-lbl">Bắt Đầu</div>
             </div>
 
             <!-- 2. VỀ ĐÍCH: Hiện ? nếu chưa xong -->
@@ -184,7 +184,7 @@
                         ?
                     {{/if}}
                 </div>
-                <div class="stat-lbl">Finish</div>
+                <div class="stat-lbl">Về Đích</div>
             </div>
 
             <!-- 3. KẾT QUẢ: Hiện ? nếu chưa xong -->
@@ -196,7 +196,7 @@
                         ?
                     {{/if}}
                 </div>
-                <div class="stat-lbl">Result</div>
+                <div class="stat-lbl">Kết Quả</div>
             </div>
         </div>
 
@@ -219,14 +219,14 @@
                         {{/if}}
                     </div>
                     
-                    <div class="cell-lbl">DAY {{day}}</div>
+                    <div class="cell-lbl">NGÀY {{day}}</div>
                 </div>
             {{/each}}
         </div>
 
         <!-- FOOTER -->
         <div class="footer">
-            <div class="footer-lbl">WEIGHT CHANGE IN THIS LAP:</div>
+            <div class="footer-lbl">CÂN NẶNG THAY ĐỔI TRONG VÒNG NÀY:</div>
             <div class="footer-res">
                 <div class="footer-val c-orange">
                     {{formatWeight stats.delta_weight}} kg
