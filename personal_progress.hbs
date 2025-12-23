@@ -65,19 +65,14 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
         .stat-value { font-size: 56px; font-weight: 700; margin-bottom: 10px; }
-        
-        /* 🔥 SIZE CHỮ TO (34px) */
         .stat-label { 
-            font-size: 34px !important; 
-            color: #555 !important; 
-            font-weight: 700 !important; 
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 34px !important; color: #555 !important; font-weight: 700 !important; 
+            text-transform: uppercase; letter-spacing: 1px;
         }
         
         .text-orange { color: #E64A19; }
         .text-green { color: #7CB342; }
-        .text-grey { color: #888; } /* Màu xám cho dấu hỏi */
+        .text-grey { color: #BBB; } /* Màu xám nhạt cho dấu ? */
 
         /* GRID DAYS */
         .grid { width: 100%; display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-bottom: 50px; }
@@ -86,14 +81,19 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             position: relative;
             background: #F0F0F3;
+            /* Box Shadow mặc định (cho ô chưa nhập) */
             box-shadow: 6px 6px 12px rgba(163,177,198, 0.4), -6px -6px 12px #FFFFFF;
         }
+        
+        /* Màu nền cho các trạng thái */
         .cell.gain { background: linear-gradient(135deg, #FF7043, #E64A19); box-shadow: 10px 10px 20px rgba(230, 74, 25, 0.3); border: none; }
         .cell.loss { background: linear-gradient(135deg, #AED581, #7CB342); box-shadow: 10px 10px 20px rgba(124, 179, 66, 0.3); border: none; }
-        
-        .cell-val { font-size: 42px; font-weight: 700; color: #555; z-index: 2; margin-bottom: 30px; }
+        .cell.logged { background: #E0E0E0; } /* Màu xám đậm cho đứng cân */
+
+        .cell-val { font-size: 42px; font-weight: 700; color: #BBB; z-index: 2; margin-bottom: 30px; }
         .gain .cell-val, .loss .cell-val { color: white; }
-        
+        .logged .cell-val { color: #666; }
+
         .cell-lbl {
             position: absolute; bottom: 15px;
             background: rgba(255,255,255,0.8);
@@ -138,7 +138,7 @@
             <div class="info">
                 <h1>{{player.name}}</h1>
                 <p>{{player.team}}</p>
-                                    <p style="color: #4CAF50; font-weight: 500;">Vòng: {{player.round_name}}</p>
+                <p style="color: #4CAF50; font-weight: 500;">Vòng: {{player.round_name}}</p>
                 <p>{{player.info_line}}</p>
             </div>
         </div>
@@ -147,24 +147,27 @@
 
         <!-- Main Stats -->
         <div class="stats-row">
-            <!-- BẮT ĐẦU -->
+            <!-- BẮT ĐẦU: Luôn hiện số -->
             <div class="stat-box">
                 <div class="stat-value text-orange">{{#if stats.start}}{{stats.start}}{{else}}?{{/if}}</div>
                 <div class="stat-label">BẮT ĐẦU</div>
             </div>
-            <!-- VỀ ĐÍCH -->
+            
+            <!-- VỀ ĐÍCH: Chỉ hiện khi xong -->
             <div class="stat-box">
-                <!-- Nếu chưa finish thì hiện dấu ? màu xám -->
-                <div class="stat-value {{#if stats.finish}}text-green{{else}}text-grey{{/if}}">
-                    {{#if stats.finish}}{{stats.finish}}{{else}}?{{/if}}
+                <div class="stat-value {{#if (eq stats.finish '?')}}text-grey{{else}}text-green{{/if}}">
+                    {{stats.finish}}
                 </div>
                 <div class="stat-label">VỀ ĐÍCH</div>
             </div>
-            <!-- KẾT QUẢ -->
+            
+            <!-- KẾT QUẢ: Chỉ hiện khi xong -->
             <div class="stat-box">
-                <!-- Nếu chưa có result thì hiện dấu ? màu xám -->
-                <div class="stat-value {{#if stats.result}}{{#if (lt stats.result 0)}}text-green{{else}}text-orange{{/if}}{{else}}text-grey{{/if}}">
-                    {{#if stats.result}}{{stats.result}}{{else}}?{{/if}}
+                <div class="stat-value 
+                    {{#if (eq stats.result '?')}}text-grey
+                    {{else if (lt (formatWeight stats.result) 0)}}text-green
+                    {{else}}text-orange{{/if}}">
+                    {{stats.result}}
                 </div>
                 <div class="stat-label">KẾT QUẢ</div>
             </div>
@@ -177,12 +180,12 @@
                 {{#if leader}}<div class="badge" style="left:50%; transform:translateX(-50%)">{{leader}}</div>{{/if}}
                 
                 <div class="cell-val">
-                    {{#if (eq status 'future')}}
-                        <span style="color:transparent">.</span>
+                    <!-- Logic hiển thị số liệu trong ô -->
+                    {{#if (eq value_g '?')}}
+                        ?
                     {{else}}
-                        {{#if (eq status 'missing')}}?{{else}}
-                            {{#if (gt value_g 0)}}+{{/if}}{{value_g}}
-                        {{/if}}
+                        <!-- Nếu số dương (Tăng) thì thêm dấu + -->
+                        {{#if (gt value_g 0)}}+{{/if}}{{value_g}}
                     {{/if}}
                 </div>
                 <div class="cell-lbl">{{label}}</div>
@@ -194,9 +197,14 @@
         <div class="footer">
             <div class="footer-lbl">CÂN NẶNG THAY ĐỔI TRONG VÒNG NÀY:</div>
             <div class="footer-box">
-                <!-- Footer vẫn hiện tiến độ hiện tại để động viên -->
-                <div class="footer-val {{#if (lt stats.current_change 0)}}text-green{{/if}}">
-                    {{#if stats.start}}{{stats.current_change}} kg{{else}}...{{/if}}
+                <!-- Footer luôn hiển thị tiến độ thực tế (Current Change) -->
+                <div class="footer-val 
+                    {{#if (lt (formatWeight stats.current_change) 0)}}text-green{{else}}text-orange{{/if}}">
+                    {{#if stats.start}}
+                        {{stats.current_change}} kg
+                    {{else}}
+                        -- kg
+                    {{/if}}
                 </div>
             </div>
         </div>
