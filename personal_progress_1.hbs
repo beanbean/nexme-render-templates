@@ -28,8 +28,37 @@
         }
 
         /* --- HEADER --- */
-        .header-row { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 20px; }
-        .header-title { font-size: 28px; color: #7A7F8D; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        /* --- HEADER --- */
+.header-row { 
+    width: 100%; 
+    display: flex; 
+    justify-content: flex-end; /* Đẩy hết sang phải */
+    align-items: center; 
+    margin-bottom: 20px; 
+    padding: 0 20px; 
+    gap: 15px; /* Khoảng cách giữa chữ và nút ON */
+}
+
+.header-text-block {
+    text-align: right; 
+    display: flex; 
+    flex-direction: column;
+}
+
+.header-title { 
+    font-size: 28px; 
+    color: #7A7F8D; 
+    text-transform: uppercase; 
+    font-weight: 700; 
+    letter-spacing: 1px; 
+    line-height: 1.2;
+}
+
+.header-subtitle {
+    font-size: 24px; 
+    color: #999; 
+    font-weight: 300;
+}
         
         /* Toggle Switch Graphic */
         .toggle-on {
@@ -146,14 +175,19 @@
 <body>
     <div class="card">
         <!-- HEADER TOP -->
-        <div class="header-row">
-            <div></div>
-            <div style="text-align:right">
-                <div class="header-title">NEXME MARATHON</div>
-                <div style="font-size:24px; color:#999; font-weight:300;">tiến trình cá nhân</div>
-            </div>
-            <div class="toggle-on"><span class="toggle-text">ON</span></div>
-        </div>
+        <!-- HEADER TOP -->
+<div class="header-row">
+    <!-- Khối chữ -->
+    <div class="header-text-block">
+        <div class="header-title">NEXME MARATHON</div>
+        <div class="header-subtitle">tiến trình cá nhân</div>
+    </div>
+    
+    <!-- Nút ON -->
+    <div class="toggle-on">
+        <span class="toggle-text">ON</span>
+    </div>
+</div>
 
         <!-- PROFILE -->
         <div class="profile-box">
