@@ -60,7 +60,7 @@
       justify-content: flex-end;
       gap: 160px;
       margin-bottom: 16px;
-      padding-right: 10px;
+      padding-right: 40px; /* P3: Adjusted to center labels over columns */
     }
 
     .col-label {
@@ -98,10 +98,10 @@
     }
 
     .avatar-oval {
-      width: 160px;
-      height: 120px;
+      width: 192px;  /* P4: Increased from 160px (20% larger) */
+      height: 144px; /* P4: Increased from 120px (20% larger) */
       background: rgba(255, 255, 255, 0.55);
-      border-radius: 50px;
+      border-radius: 60px; /* P4: Scaled from 50px */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -110,8 +110,8 @@
     }
 
     .avatar {
-      width: 100px;
-      height: 100px;
+      width: 120px;  /* P4: Increased from 100px (20% larger) */
+      height: 120px;
       border-radius: 50%;
       object-fit: cover;
       border: 4px solid rgba(255, 255, 255, 0.7);
@@ -120,6 +120,9 @@
     .crown-icon {
       width: 78px;
       height: 78px;
+      position: absolute;  /* P1: Absolute positioning for z-index control */
+      z-index: 9999;       /* P1: Ensure crown is on top layer */
+      pointer-events: none; /* P1: Don't interfere with interactions */
     }
 
     .player-name {
@@ -164,9 +167,10 @@
     .captain-text {
       font-size: 36px;
       font-weight: 600;
-      color: rgba(0, 0, 0, 0.55);
-      text-align: center;
+      color: rgba(31, 42, 55, 0.65); /* P2: Darker for better readability */
+      text-align: right;
       width: 160px;
+      margin-left: 14px; /* P2: Match value-container gap */
     }
 
     .footer-bar {
@@ -207,7 +211,7 @@
   <div class="leaderboard">
     {{#each players}}
       {{#if is_captain}}
-        <!-- Captain Row -->
+        <!-- P2: Captain Row (always last) -->
         <div class="player-row">
           <div class="avatar-oval">
             <img src="{{avatar}}" alt="{{name}}" class="avatar">
@@ -218,11 +222,7 @@
         </div>
       {{else}}
         <!-- Player Row -->
-        {{#if (eq rank "1")}}
-          <img src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg" alt="Crown" class="crown-icon" style="margin-left: 195px; margin-bottom: -78px;">
-        {{/if}}
-
-        <div class="player-row {{#if (eq rank "1")}}winner{{/if}}">
+        <div class="player-row {{#if (eq rank "1")}}winner{{/if}}" style="position: relative;">
           <div class="avatar-oval">
             <img src="{{avatar}}" alt="{{name}}" class="avatar">
           </div>
@@ -241,6 +241,11 @@
           <div class="value-container">
             <div class="value-round">{{round_display}}</div>
           </div>
+
+          <!-- P1: Crown rendered AFTER row content for proper z-index layering -->
+          {{#if (eq rank "1")}}
+            <img src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg" alt="Crown" class="crown-icon" style="top: -78px; left: 195px;">
+          {{/if}}
         </div>
       {{/if}}
     {{/each}}
