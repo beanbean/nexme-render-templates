@@ -2,8 +2,8 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=1080, height=1444">
-  <title>Nexme Marathon - Bảng Xếp Hạng</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng Xếp Hạng Đội</title>
   <style>
     * {
       margin: 0;
@@ -11,390 +11,292 @@
       box-sizing: border-box;
     }
 
+    @font-face {
+      font-family: 'BeVietnamPro';
+      src: url('https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/BeVietnamPro-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'BeVietnamPro';
+      src: url('https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/BeVietnamPro-SemiBold.ttf') format('truetype');
+      font-weight: 600;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'BeVietnamPro';
+      src: url('https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/BeVietnamPro-Medium.ttf') format('truetype');
+      font-weight: 500;
+      font-style: normal;
+    }
+
     body {
       width: 1080px;
-      height: 1444px;
-      background: linear-gradient(180deg, #00BCD4 0%, #2196F3 100%);
-      font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+      min-height: 1444px;
+      font-family: 'BeVietnamPro', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       padding: 50px 40px;
-      overflow: hidden;
+      color: #1a202c;
     }
 
-    /* HEADER */
+    .container {
+      background: white;
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    }
+
     .header {
       text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .small-title {
-      font-size: 22px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 6px;
-    }
-
-    .big-title {
-      font-size: 48px;
-      font-weight: bold;
-      color: white;
       margin-bottom: 12px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
-    .team-name {
-      font-size: 36px;
-      font-weight: 600;
-      color: white;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .meta-line {
-      font-size: 24px;
-      color: rgba(255, 255, 255, 0.95);
-      font-weight: 500;
-    }
-
-    /* COLUMN HEADERS */
-    .column-headers {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      padding: 0 20px;
+    .title {
+      font-size: 64px;
+      font-weight: 700;
+      color: #2d3748;
+      letter-spacing: -0.5px;
       margin-bottom: 8px;
     }
 
-    .column-headers-left {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .column-headers-right {
-      display: flex;
-      gap: 40px;
-      flex-shrink: 0;
-    }
-
-    .column-header-item {
-      text-align: right;
-      min-width: 80px;
-    }
-
-    .column-header-label {
-      font-size: 18px;
-      color: white;
+    .team-name {
+      font-size: 44px;
       font-weight: 600;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      color: #667eea;
+      margin-bottom: 12px;
     }
 
-    /* LEADERBOARD */
+    .meta-info {
+      font-size: 32px;
+      font-weight: 500;
+      color: #718096;
+    }
+
+    .column-headers {
+      display: grid;
+      grid-template-columns: 80px 1fr 180px 180px;
+      gap: 20px;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      margin: 32px 0 16px 0;
+    }
+
+    .column-headers .label {
+      font-size: 26px;
+      font-weight: 600;
+      color: white;
+      text-align: center;
+    }
+
+    .column-headers .label:first-child {
+      text-align: left;
+    }
+
+    .column-headers .label:nth-child(2) {
+      text-align: left;
+      padding-left: 12px;
+    }
+
     .leaderboard {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-bottom: 30px;
     }
 
-    /* RANK #1 - WINNER BANNER */
-    .player-row.rank-1 {
-      background: #00E676;
-      border: 5px solid white;
-      border-radius: 20px;
-      padding: 28px 24px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-      min-height: 140px;
-    }
-
-    .player-row.rank-1 .rank-badge {
-      width: 70px;
-      height: 70px;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 42px;
-      font-weight: bold;
-      color: white;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-      flex-shrink: 0;
-    }
-
-    .player-row.rank-1 .avatar-container {
-      position: relative;
-      flex-shrink: 0;
-    }
-
-    .player-row.rank-1 .avatar {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 4px solid white;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    .player-row.rank-1 .crown-icon {
-      position: absolute;
-      top: -6px;
-      right: -6px;
-      width: 26px;
-      height: 26px;
-      filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.4));
-    }
-
-    .player-row.rank-1 .player-name {
-      font-size: 40px;
-      font-weight: bold;
-      color: #1B5E20;
-    }
-
-    .player-row.rank-1 .score {
-      font-size: 48px;
-      font-weight: bold;
-      color: #1B5E20;
-    }
-
-    /* RANK 2+ ROWS */
     .player-row {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 16px;
-      padding: 18px 20px;
-      display: flex;
+      display: grid;
+      grid-template-columns: 80px 1fr 180px 180px;
+      gap: 20px;
       align-items: center;
-      gap: 18px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      padding: 20px 24px;
+      background: #f7fafc;
+      border-radius: 16px;
+      transition: all 0.2s;
       min-height: 100px;
     }
 
-    .player-row .rank-badge {
-      width: 55px;
-      height: 55px;
-      background: #E0E0E0;
-      border-radius: 50%;
+    .player-row.captain-row {
+      background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%);
+      border: 2px solid #f39c12;
+    }
+
+    .player-row:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .rank-badge {
+      font-size: 40px;
+      font-weight: 700;
+      color: #2d3748;
+      text-align: center;
+      position: relative;
+    }
+
+    .rank-badge.top1 {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
-      font-weight: bold;
-      color: #616161;
-      flex-shrink: 0;
     }
 
-    .player-row .avatar-container {
-      position: relative;
-      flex-shrink: 0;
-    }
-
-    .player-row .avatar {
-      width: 75px;
-      height: 75px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #E0E0E0;
+    .rank-badge.top1 .crown-icon {
+      width: 52px;
+      height: 52px;
+      display: inline-block;
     }
 
     .player-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .player-row .player-name {
-      font-size: 30px;
-      font-weight: 600;
-      color: #212121;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    /* SCORES */
-    .scores {
       display: flex;
-      gap: 40px;
       align-items: center;
-      flex-shrink: 0;
+      gap: 16px;
+      padding-left: 12px;
     }
 
-    .score-item {
-      text-align: right;
-      min-width: 80px;
+    .avatar {
+      width: 85px;
+      height: 85px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #e2e8f0;
     }
 
-    .player-row .score {
+    .player-name {
+      font-size: 38px;
+      font-weight: 600;
+      color: #2d3748;
+      flex: 1;
+    }
+
+    .score-cell {
+      font-size: 40px;
+      font-weight: 700;
+      text-align: center;
+      color: #2d3748;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .score-cell.warning {
+      color: #e53e3e;
+    }
+
+    .score-cell .warning-icon {
+      width: 32px;
+      height: 32px;
+      display: inline-block;
+    }
+
+    .captain-note {
       font-size: 32px;
-      font-weight: bold;
-      color: #424242;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 6px;
-    }
-
-    .warning-icon {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-    }
-
-    /* CAPTAIN ROW */
-    .player-row.captain-row {
-      background: rgba(255, 255, 255, 0.9);
-      border: 2px solid rgba(33, 150, 243, 0.3);
-    }
-
-    .player-row.captain-row .rank-badge {
-      background: #90CAF9;
-      color: white;
-      font-size: 28px;
-    }
-
-    .player-row.captain-row .avatar {
-      border-color: #2196F3;
-    }
-
-    .captain-note-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      min-width: 0;
-    }
-
-    .captain-note-label {
-      font-size: 16px;
-      color: #1976D2;
       font-weight: 600;
+      color: #f39c12;
+      text-align: center;
     }
 
-    .captain-note-text {
-      font-size: 22px;
-      color: #424242;
-      line-height: 1.3;
-      font-weight: 500;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* FOOTER */
     .footer {
+      margin-top: 32px;
+      padding: 28px;
+      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+      border-radius: 16px;
       text-align: center;
-      margin-top: 40px;
-      padding-top: 30px;
-      border-top: 2px solid rgba(255, 255, 255, 0.4);
     }
 
-    .team-today-loss {
-      font-size: 32px;
-      font-weight: bold;
+    .footer.warning-footer {
+      background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    }
+
+    .footer-text {
+      font-size: 36px;
+      font-weight: 600;
       color: white;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 80px 40px;
-      font-size: 32px;
-      color: rgba(255, 255, 255, 0.9);
-      font-weight: 500;
+      line-height: 1.4;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="small-title">Nexme Marathon</div>
-    <div class="big-title">Marathon giảm cân</div>
-    <div class="team-name">{{team_name}}</div>
-    <div class="meta-line">Vòng {{round_number}} · Chặng {{lap_number}} · Ngày {{day_number}}</div>
-  </div>
-
-  {{#if players}}
-    {{!-- COLUMN HEADERS --}}
-    <div class="column-headers">
-      <div class="column-headers-left"></div>
-      <div class="column-headers-right">
-        <div class="column-header-item">
-          <div class="column-header-label">Hôm nay</div>
-        </div>
-        <div class="column-header-item">
-          <div class="column-header-label">Vòng này</div>
-        </div>
-      </div>
+  <div class="container">
+    <div class="header">
+      <div class="title">🏆 BẢNG XẾP HẠNG ĐỘI</div>
+      <div class="team-name">👥 {{team_name}}</div>
+      <div class="meta-info">Vòng {{round_number}} · Ngày {{day_number}}</div>
     </div>
 
+    <!-- Column Headers (rendered ONCE) -->
+    <div class="column-headers">
+      <div class="label">#</div>
+      <div class="label">Người chơi</div>
+      <div class="label">Hôm nay</div>
+      <div class="label">Vòng này</div>
+    </div>
+
+    <!-- Player Rows -->
     <div class="leaderboard">
       {{#each players}}
-        {{#if (or (eq role "captain") is_captain)}}
-          {{!-- CAPTAIN ROW --}}
+        {{#if is_captain}}
+          <!-- Captain Row -->
           <div class="player-row captain-row">
-            <div class="rank-badge">👨‍✈️</div>
-            <div class="avatar-container">
-              <img class="avatar" src="{{avatar}}" alt="{{name}}" onerror="this.src='https://via.placeholder.com/100?text=DT'">
-            </div>
+            <div class="rank-badge">👑</div>
             <div class="player-info">
-              <div class="player-name">{{name}}</div>
+              <img src="{{avatar}}" alt="{{name}}" class="avatar">
+              <span class="player-name">{{name}}</span>
             </div>
-            <div class="captain-note-container">
-              <div class="captain-note-label">Ghi chú từ đội trưởng</div>
-              <div class="captain-note-text">{{#if captain_note}}{{captain_note}}{{else}}--{{/if}}</div>
-            </div>
+            <div class="captain-note">Đội Trưởng</div>
+            <div class="captain-note">Đội Trưởng</div>
           </div>
         {{else}}
-          {{!-- PLAYER ROW --}}
-          <div class="player-row {{#if @first}}rank-1{{/if}}">
-            <div class="rank-badge">{{rank}}</div>
+          <!-- Regular Player Row -->
+          <div class="player-row">
+            {{#if (eq rank "1")}}
+              <div class="rank-badge top1">
+                <img src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg" alt="Crown" class="crown-icon">
+              </div>
+            {{else}}
+              <div class="rank-badge">{{rank}}</div>
+            {{/if}}
 
-            <div class="avatar-container">
-              <img class="avatar" src="{{avatar}}" alt="{{name}}" onerror="this.src='https://via.placeholder.com/100?text=?'">
-              {{#if @first}}
-                <img class="crown-icon" src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg" alt="crown">
+            <div class="player-info">
+              <img src="{{avatar}}" alt="{{name}}" class="avatar">
+              <span class="player-name">{{name}}</span>
+            </div>
+
+            <div class="score-cell {{#if has_warning_today}}warning{{/if}}">
+              {{today_display}}
+              {{#if has_warning_today}}
+                <img src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/warning.svg" alt="Warning" class="warning-icon">
               {{/if}}
             </div>
 
-            <div class="player-info">
-              <div class="player-name">{{name}}</div>
-            </div>
-
-            <div class="scores">
-              <div class="score-item">
-                <div class="score">
-                  {{#if has_warning_today}}
-                    <svg class="warning-icon" viewBox="0 0 24 24" fill="#FF9800" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 2L2 21h20L12 2zm0 6l6 10H6l6-10zm-1 7h2v2h-2v-2zm0-5h2v4h-2V10z"/>
-                    </svg>
-                  {{/if}}
-                  <span>{{today_display}}</span>
-                </div>
-              </div>
-              <div class="score-item">
-                <div class="score">
-                  {{#if has_warning_round}}
-                    <svg class="warning-icon" viewBox="0 0 24 24" fill="#FF9800" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 2L2 21h20L12 2zm0 6l6 10H6l6-10zm-1 7h2v2h-2v-2zm0-5h2v4h-2V10z"/>
-                    </svg>
-                  {{/if}}
-                  <span>{{round_display}}</span>
-                </div>
-              </div>
+            <div class="score-cell {{#if has_warning_round}}warning{{/if}}">
+              {{round_display}}
+              {{#if has_warning_round}}
+                <img src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/warning.svg" alt="Warning" class="warning-icon">
+              {{/if}}
             </div>
           </div>
         {{/if}}
       {{/each}}
     </div>
 
-    <div class="footer">
-      <div class="team-today-loss">Đội hôm nay giảm: {{team_today_loss_kg}} kg</div>
+    <!-- Footer -->
+    <div class="footer {{#if team_all_gain}}warning-footer{{/if}}">
+      {{#if team_all_gain}}
+        <div class="footer-text">
+          ⚠️ CẢ ĐỘI TĂNG CÂN!<br>
+          Hôm nay đội chưa có ai giảm cân.<br>
+          Cố gắng hơn vào ngày mai nhé! 💪
+        </div>
+      {{else}}
+        <div class="footer-text">
+          💪 TỔNG GIẢM HÔM NAY<br>
+          {{team_today_loss_kg}} kg
+        </div>
+      {{/if}}
     </div>
-  {{else}}
-    <div class="empty-state">
-      Chưa có dữ liệu xếp hạng cho chặng này
-    </div>
-  {{/if}}
+  </div>
 </body>
 </html>
