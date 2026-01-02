@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=1080, height=1444">
-  <title>Wellness Daily Score - Lap Finish Leaderboard</title>
+  <title>Điểm Sức Khỏe Hằng Ngày - Bảng Xếp Hạng</title>
   <style>
     * {
       margin: 0;
@@ -80,10 +80,12 @@
       font-weight: bold;
       color: white;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+      flex-shrink: 0;
     }
 
     .player-row.rank-1 .avatar-container {
       position: relative;
+      flex-shrink: 0;
     }
 
     .player-row.rank-1 .avatar {
@@ -144,10 +146,12 @@
       font-size: 32px;
       font-weight: bold;
       color: #616161;
+      flex-shrink: 0;
     }
 
     .player-row .avatar-container {
       position: relative;
+      flex-shrink: 0;
     }
 
     .player-row .avatar {
@@ -160,6 +164,7 @@
 
     .player-info {
       flex: 1;
+      min-width: 0;
     }
 
     .player-row .player-name {
@@ -167,16 +172,21 @@
       font-weight: 600;
       color: #212121;
       margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .scores {
       display: flex;
       gap: 40px;
       align-items: center;
+      flex-shrink: 0;
     }
 
     .score-item {
       text-align: right;
+      min-width: 80px;
     }
 
     .player-row .score-label {
@@ -190,6 +200,48 @@
       font-size: 32px;
       font-weight: bold;
       color: #424242;
+    }
+
+    /* CAPTAIN ROW - SPECIAL STYLING */
+    .player-row.captain-row {
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid rgba(33, 150, 243, 0.3);
+    }
+
+    .player-row.captain-row .rank-badge {
+      background: #90CAF9;
+      color: white;
+      font-size: 28px;
+    }
+
+    .player-row.captain-row .avatar {
+      border-color: #2196F3;
+    }
+
+    .captain-note-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .captain-note-label {
+      font-size: 16px;
+      color: #1976D2;
+      font-weight: 600;
+    }
+
+    .captain-note-text {
+      font-size: 22px;
+      color: #424242;
+      line-height: 1.3;
+      font-weight: 500;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     /* FOOTER */
@@ -218,48 +270,69 @@
 </head>
 <body>
   <div class="header">
-    <div class="main-title">Wellness Daily Score</div>
-    <div class="subtitle">LAP FINISH LEADERBOARD</div>
-    <div class="team-info">Team {{team_name}}, Lap {{lap_number}}</div>
+    <div class="main-title">Điểm Sức Khỏe Hằng Ngày</div>
+    <div class="subtitle">BẢNG XẾP HẠNG KẾT THÚC CHẶNG</div>
+    <div class="team-info">Đội {{team_name}}, Chặng {{lap_number}}</div>
   </div>
 
   {{#if players}}
     <div class="leaderboard">
       {{#each players}}
-        <div class="player-row {{#if @first}}rank-1{{/if}}">
-          <div class="rank-badge">{{rank}}</div>
+        {{#if (or (eq role "captain") is_captain)}}
+          {{!-- CAPTAIN ROW - Always last, non-ranked --}}
+          <div class="player-row captain-row">
+            <div class="rank-badge">👨‍✈️</div>
 
-          <div class="avatar-container">
-            <img class="avatar" src="{{avatar}}" alt="{{name}}" onerror="this.src='https://via.placeholder.com/100?text=?'">
-            {{#if @first}}
-              <div class="crown">👑</div>
-            {{/if}}
-          </div>
-
-          <div class="player-info">
-            <div class="player-name">{{name}}</div>
-          </div>
-
-          <div class="scores">
-            <div class="score-item">
-              <div class="score-label">This Lap</div>
-              <div class="score">{{daily_loss}}</div>
+            <div class="avatar-container">
+              <img class="avatar" src="{{avatar}}" alt="{{name}}" onerror="this.src='https://via.placeholder.com/100?text=DT'">
             </div>
-            <div class="score-item">
-              <div class="score-label">Total</div>
-              <div class="score">{{total_loss}}</div>
+
+            <div class="player-info">
+              <div class="player-name">{{name}}</div>
+            </div>
+
+            <div class="captain-note-container">
+              <div class="captain-note-label">Ghi chú từ đội trưởng</div>
+              <div class="captain-note-text">{{#if captain_note}}{{captain_note}}{{else}}Chúc mừng các chiến sĩ!{{/if}}</div>
             </div>
           </div>
-        </div>
+        {{else}}
+          {{!-- PLAYER ROW - Ranked --}}
+          <div class="player-row {{#if @first}}rank-1{{/if}}">
+            <div class="rank-badge">{{rank}}</div>
+
+            <div class="avatar-container">
+              <img class="avatar" src="{{avatar}}" alt="{{name}}" onerror="this.src='https://via.placeholder.com/100?text=?'">
+              {{#if @first}}
+                <div class="crown">👑</div>
+              {{/if}}
+            </div>
+
+            <div class="player-info">
+              <div class="player-name">{{name}}</div>
+            </div>
+
+            <div class="scores">
+              <div class="score-item">
+                <div class="score-label">Chặng này</div>
+                <div class="score">{{daily_loss}}</div>
+              </div>
+              <div class="score-item">
+                <div class="score-label">Tổng cộng</div>
+                <div class="score">{{total_loss}}</div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
       {{/each}}
     </div>
 
     <div class="footer">
-      <div class="team-stars">Team stars for this Lap: {{team_stars}} ⭐</div>
+      <div class="team-stars">Sao của đội trong chặng này: {{team_stars}} ⭐</div>
     </div>
   {{else}}
     <div class="empty-state">
-      No leaderboard data available for this lap
+      Chưa có dữ liệu xếp hạng cho chặng này
     </div>
   {{/if}}
 </body>
