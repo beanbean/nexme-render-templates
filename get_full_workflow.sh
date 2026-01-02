@@ -1,0 +1,12 @@
+#!/bin/bash
+API_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNjFmZmIxYy00ODNjLTQ3YjUtOTg5ZC1iYzJiNWQ1YjM3NzYiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY3MjQ2NTA1fQ.wRd6jgQh73FXPWeW_Rn7b1UXXI_L8PGU_3JO6GcQOTg"
+
+curl -s "https://workflow.nexme.vn/api/v1/workflows/9fD7jTNV9LbMYGJu" \
+  -H "X-N8N-API-KEY: $API_KEY" > /tmp/current_workflow.json
+
+echo "Số nodes:"
+jq '.nodes | length' /tmp/current_workflow.json
+
+echo ""
+echo "Danh sách nodes:"
+jq '.nodes[] | {name, type}' /tmp/current_workflow.json
