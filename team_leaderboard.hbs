@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=1080, height=1444">
-  <title>Điểm Sức Khỏe Hằng Ngày - Bảng Xếp Hạng</title>
+  <title>Nexme Marathon - Bảng Xếp Hạng</title>
   <style>
     * {
       margin: 0;
@@ -25,25 +25,31 @@
       margin-bottom: 40px;
     }
 
-    .main-title {
+    .small-title {
+      font-size: 22px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 6px;
+    }
+
+    .big-title {
       font-size: 48px;
       font-weight: bold;
       color: white;
-      margin-bottom: 8px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .subtitle {
-      font-size: 36px;
-      font-weight: 600;
-      color: white;
-      letter-spacing: 2px;
       margin-bottom: 12px;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
-    .team-info {
-      font-size: 28px;
+    .team-name {
+      font-size: 36px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .meta-line {
+      font-size: 24px;
       color: rgba(255, 255, 255, 0.95);
       font-weight: 500;
     }
@@ -97,11 +103,12 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
-    .player-row.rank-1 .crown {
+    .player-row.rank-1 .crown-svg {
       position: absolute;
-      top: -8px;
-      right: -8px;
-      font-size: 40px;
+      top: -6px;
+      right: -6px;
+      width: 28px;
+      height: 28px;
       filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.4));
     }
 
@@ -200,9 +207,19 @@
       font-size: 32px;
       font-weight: bold;
       color: #424242;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
     }
 
-    /* CAPTAIN ROW - SPECIAL STYLING */
+    .warning-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    /* CAPTAIN ROW */
     .player-row.captain-row {
       background: rgba(255, 255, 255, 0.9);
       border: 2px solid rgba(33, 150, 243, 0.3);
@@ -252,7 +269,7 @@
       border-top: 2px solid rgba(255, 255, 255, 0.4);
     }
 
-    .team-stars {
+    .team-daily-loss {
       font-size: 32px;
       font-weight: bold;
       color: white;
@@ -270,41 +287,41 @@
 </head>
 <body>
   <div class="header">
-    <div class="main-title">Điểm Sức Khỏe Hằng Ngày</div>
-    <div class="subtitle">BẢNG XẾP HẠNG KẾT THÚC CHẶNG</div>
-    <div class="team-info">Đội {{team_name}}, Chặng {{lap_number}}</div>
+    <div class="small-title">Nexme Marathon</div>
+    <div class="big-title">Marathon giảm cân</div>
+    <div class="team-name">{{team_name}}</div>
+    <div class="meta-line">Vòng {{round_number}} · Chặng {{lap_number}} · Ngày {{day_number}}</div>
   </div>
 
   {{#if players}}
     <div class="leaderboard">
       {{#each players}}
         {{#if (or (eq role "captain") is_captain)}}
-          {{!-- CAPTAIN ROW - Always last, non-ranked --}}
+          {{!-- CAPTAIN ROW --}}
           <div class="player-row captain-row">
             <div class="rank-badge">👨‍✈️</div>
-
             <div class="avatar-container">
               <img class="avatar" src="{{avatar}}" alt="{{name}}" onerror="this.src='https://via.placeholder.com/100?text=DT'">
             </div>
-
             <div class="player-info">
               <div class="player-name">{{name}}</div>
             </div>
-
             <div class="captain-note-container">
               <div class="captain-note-label">Ghi chú từ đội trưởng</div>
               <div class="captain-note-text">{{#if captain_note}}{{captain_note}}{{else}}Chúc mừng các chiến sĩ!{{/if}}</div>
             </div>
           </div>
         {{else}}
-          {{!-- PLAYER ROW - Ranked --}}
+          {{!-- PLAYER ROW --}}
           <div class="player-row {{#if @first}}rank-1{{/if}}">
             <div class="rank-badge">{{rank}}</div>
 
             <div class="avatar-container">
               <img class="avatar" src="{{avatar}}" alt="{{name}}" onerror="this.src='https://via.placeholder.com/100?text=?'">
               {{#if @first}}
-                <div class="crown">👑</div>
+                <svg class="crown-svg" viewBox="0 0 24 24" fill="#FFD700" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8L12 2Z"/>
+                </svg>
               {{/if}}
             </div>
 
@@ -315,11 +332,18 @@
             <div class="scores">
               <div class="score-item">
                 <div class="score-label">Chặng này</div>
-                <div class="score">{{daily_loss}}</div>
+                <div class="score">
+                  {{#if has_warning}}
+                    <svg class="warning-icon" viewBox="0 0 24 24" fill="#FF9800" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2L2 21h20L12 2zm0 6l6 10H6l6-10zm-1 7h2v2h-2v-2zm0-5h2v4h-2V10z"/>
+                    </svg>
+                  {{/if}}
+                  <span>{{daily_loss_display}}</span>
+                </div>
               </div>
               <div class="score-item">
                 <div class="score-label">Tổng cộng</div>
-                <div class="score">{{total_loss}}</div>
+                <div class="score">{{total_loss_display}}</div>
               </div>
             </div>
           </div>
@@ -328,7 +352,7 @@
     </div>
 
     <div class="footer">
-      <div class="team-stars">Sao của đội trong chặng này: {{team_stars}} ⭐</div>
+      <div class="team-daily-loss">Đội hôm nay giảm: {{team_daily_loss}} kg</div>
     </div>
   {{else}}
     <div class="empty-state">
