@@ -2,8 +2,8 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bảng Xếp Hạng Đội</title>
+  <meta name="viewport" content="width=1080, height=1444">
+  <title>Team Leaderboard - {{team_name}}</title>
   <style>
     * {
       margin: 0;
@@ -11,148 +11,85 @@
       box-sizing: border-box;
     }
 
-    @font-face {
-      font-family: 'BeVietnamPro';
-      src: url('https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/BeVietnamPro-Bold.ttf') format('truetype');
-      font-weight: 700;
-      font-style: normal;
-    }
-
-    @font-face {
-      font-family: 'BeVietnamPro';
-      src: url('https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/BeVietnamPro-SemiBold.ttf') format('truetype');
-      font-weight: 600;
-      font-style: normal;
-    }
-
-    @font-face {
-      font-family: 'BeVietnamPro';
-      src: url('https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/BeVietnamPro-Medium.ttf') format('truetype');
-      font-weight: 500;
-      font-style: normal;
-    }
-
     body {
       width: 1080px;
-      min-height: 1444px;
-      font-family: 'BeVietnamPro', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 50px 40px;
-      color: #1a202c;
-    }
-
-    .container {
-      background: white;
-      border-radius: 24px;
-      padding: 48px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+      height: 1444px;
+      background: linear-gradient(180deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+      color: white;
+      font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      padding: 40px 30px;
+      overflow: hidden;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 12px;
-    }
-
-    .title {
-      font-size: 64px;
-      font-weight: 700;
-      color: #2d3748;
-      letter-spacing: -0.5px;
-      margin-bottom: 8px;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
     }
 
     .team-name {
-      font-size: 44px;
-      font-weight: 600;
-      color: #667eea;
+      font-size: 52px;
+      font-weight: bold;
+      text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7);
       margin-bottom: 12px;
+      letter-spacing: 1px;
     }
 
-    .meta-info {
-      font-size: 32px;
-      font-weight: 500;
-      color: #718096;
-    }
-
-    .column-headers {
-      display: grid;
-      grid-template-columns: 80px 1fr 180px 180px;
-      gap: 20px;
-      padding: 20px 24px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 16px;
-      margin: 32px 0 16px 0;
-    }
-
-    .column-headers .label {
-      font-size: 26px;
+    .subtitle {
+      font-size: 28px;
+      color: #FFD700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
       font-weight: 600;
-      color: white;
-      text-align: center;
     }
 
-    .column-headers .label:first-child {
-      text-align: left;
-    }
-
-    .column-headers .label:nth-child(2) {
-      text-align: left;
-      padding-left: 12px;
-    }
-
-    .leaderboard {
+    .players-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
     }
 
-    .player-row {
-      display: grid;
-      grid-template-columns: 80px 1fr 180px 180px;
-      gap: 20px;
+    .player-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      padding: 18px 20px;
+      display: flex;
       align-items: center;
-      padding: 20px 24px;
-      background: #f7fafc;
-      border-radius: 16px;
-      transition: all 0.2s;
-      min-height: 100px;
+      gap: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
     }
 
-    .player-row.captain-row {
-      background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%);
-      border: 2px solid #f39c12;
+    .player-card:hover {
+      transform: translateX(5px);
     }
 
-    .player-row:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .rank-badge {
-      font-size: 40px;
-      font-weight: 700;
-      color: #2d3748;
+    .rank-container {
+      min-width: 70px;
       text-align: center;
-      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    .rank-badge.top1 {
+    .rank-icon {
+      font-size: 44px;
+      line-height: 1;
+    }
+
+    .rank-number {
+      font-size: 38px;
+      font-weight: bold;
+      color: #FFD700;
+      background: rgba(0, 0, 0, 0.3);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .rank-badge.top1 .crown-icon {
-      width: 52px;
-      height: 52px;
-      display: inline-block;
-    }
-
-    .player-info {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding-left: 12px;
+      border: 3px solid rgba(255, 215, 0, 0.5);
     }
 
     .avatar {
@@ -160,143 +97,110 @@
       height: 85px;
       border-radius: 50%;
       object-fit: cover;
-      border: 3px solid #e2e8f0;
+      border: 3px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 
-    .player-name {
-      font-size: 38px;
-      font-weight: 600;
-      color: #2d3748;
+    .player-info {
       flex: 1;
-    }
-
-    .score-cell {
-      font-size: 40px;
-      font-weight: 700;
-      text-align: center;
-      color: #2d3748;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
       gap: 8px;
     }
 
-    .score-cell.warning {
-      color: #e53e3e;
-    }
-
-    .score-cell .warning-icon {
-      width: 32px;
-      height: 32px;
-      display: inline-block;
-    }
-
-    .captain-note {
+    .player-name {
       font-size: 32px;
       font-weight: 600;
-      color: #f39c12;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+      margin-bottom: 2px;
+    }
+
+    .stats {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+    }
+
+    .trend-icon {
+      font-size: 28px;
+    }
+
+    .weight-value {
+      font-weight: bold;
+      color: #FFD700;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .warning {
+      font-size: 24px;
+      margin-left: 4px;
+    }
+
+    .total-loss {
+      color: #E0E0E0;
+      font-size: 20px;
+    }
+
+    .empty-state {
       text-align: center;
-    }
-
-    .footer {
-      margin-top: 32px;
-      padding: 28px;
-      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-      border-radius: 16px;
-      text-align: center;
-    }
-
-    .footer.warning-footer {
-      background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-    }
-
-    .footer-text {
-      font-size: 36px;
-      font-weight: 600;
-      color: white;
-      line-height: 1.4;
+      padding: 60px 30px;
+      font-size: 28px;
+      color: rgba(255, 255, 255, 0.7);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div class="title">🏆 BẢNG XẾP HẠNG ĐỘI</div>
-      <div class="team-name">👥 {{team_name}}</div>
-      <div class="meta-info">Vòng {{round_number}} · Ngày {{day_number}}</div>
-    </div>
+  <div class="header">
+    <div class="team-name">{{team_name}}</div>
+    <div class="subtitle">🏆 Bảng Xếp Hạng Ngày {{day}}</div>
+  </div>
 
-    <!-- Column Headers (rendered ONCE) -->
-    <div class="column-headers">
-      <div class="label">#</div>
-      <div class="label">Người chơi</div>
-      <div class="label">Hôm nay</div>
-      <div class="label">Vòng này</div>
-    </div>
-
-    <!-- Player Rows -->
-    <div class="leaderboard">
+  {{#if players}}
+    <div class="players-list">
       {{#each players}}
-        {{#if is_captain}}
-          <!-- Captain Row -->
-          <div class="player-row captain-row">
-            <div class="rank-badge">👑</div>
-            <div class="player-info">
-              <img src="{{avatar}}" alt="{{name}}" class="avatar">
-              <span class="player-name">{{name}}</span>
+        <div class="player-card">
+          {{#if is_captain}}
+            <!-- Captain: Hiển thị crown thay vì rank number -->
+            <div class="rank-container">
+              <div class="rank-icon">👑</div>
             </div>
-            <div class="captain-note">Đội Trưởng</div>
-            <div class="captain-note">Đội Trưởng</div>
-          </div>
-        {{else}}
-          <!-- Regular Player Row -->
-          <div class="player-row">
-            {{#if (eq rank "1")}}
-              <div class="rank-badge top1">
-                <img src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg" alt="Crown" class="crown-icon">
+          {{else}}
+            <!-- Regular player: Hiển thị rank -->
+            <div class="rank-container">
+              <div class="rank-icon">{{{rank_icon}}}</div>
+            </div>
+          {{/if}}
+
+          <img class="avatar" src="{{avatar}}" alt="{{name}}" onerror="this.src='https://via.placeholder.com/85?text=?'">
+
+          <div class="player-info">
+            <div class="player-name">
+              {{name}}
+              {{#if is_captain}}
+                <span style="color: #FFD700; font-size: 24px; margin-left: 8px;">• Đội Trưởng</span>
+              {{/if}}
+            </div>
+
+            {{#unless is_captain}}
+              <!-- Stats chỉ hiển thị cho regular players -->
+              <div class="stats">
+                <span class="trend-icon">{{{trend}}}</span>
+                <span class="weight-value">{{daily_loss_display}} kg</span>
+                {{#if warning}}
+                  <span class="warning">{{{warning}}}</span>
+                {{/if}}
+                <span class="total-loss">• Tổng: {{total_loss_display}} kg</span>
               </div>
-            {{else}}
-              <div class="rank-badge">{{rank}}</div>
-            {{/if}}
-
-            <div class="player-info">
-              <img src="{{avatar}}" alt="{{name}}" class="avatar">
-              <span class="player-name">{{name}}</span>
-            </div>
-
-            <div class="score-cell {{#if has_warning_today}}warning{{/if}}">
-              {{today_display}}
-              {{#if has_warning_today}}
-                <img src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/warning.svg" alt="Warning" class="warning-icon">
-              {{/if}}
-            </div>
-
-            <div class="score-cell {{#if has_warning_round}}warning{{/if}}">
-              {{round_display}}
-              {{#if has_warning_round}}
-                <img src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/warning.svg" alt="Warning" class="warning-icon">
-              {{/if}}
-            </div>
+            {{/unless}}
           </div>
-        {{/if}}
+        </div>
       {{/each}}
     </div>
-
-    <!-- Footer -->
-    <div class="footer {{#if team_all_gain}}warning-footer{{/if}}">
-      {{#if team_all_gain}}
-        <div class="footer-text">
-          ⚠️ CẢ ĐỘI TĂNG CÂN!<br>
-          Hôm nay đội chưa có ai giảm cân.<br>
-          Cố gắng hơn vào ngày mai nhé! 💪
-        </div>
-      {{else}}
-        <div class="footer-text">
-          💪 TỔNG GIẢM HÔM NAY<br>
-          {{team_today_loss_kg}} kg
-        </div>
-      {{/if}}
+  {{else}}
+    <div class="empty-state">
+      Chưa có dữ liệu xếp hạng cho ngày này
     </div>
-  </div>
+  {{/if}}
 </body>
 </html>
