@@ -20,6 +20,7 @@
       overflow: hidden;
     }
 
+    /* HEADER */
     .header {
       text-align: center;
       margin-bottom: 40px;
@@ -54,6 +55,39 @@
       font-weight: 500;
     }
 
+    /* COLUMN HEADERS */
+    .column-headers {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 0 20px;
+      margin-bottom: 8px;
+    }
+
+    .column-headers-left {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .column-headers-right {
+      display: flex;
+      gap: 40px;
+      flex-shrink: 0;
+    }
+
+    .column-header-item {
+      text-align: right;
+      min-width: 80px;
+    }
+
+    .column-header-label {
+      font-size: 18px;
+      color: white;
+      font-weight: 600;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    /* LEADERBOARD */
     .leaderboard {
       display: flex;
       flex-direction: column;
@@ -103,12 +137,12 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
-    .player-row.rank-1 .crown-svg {
+    .player-row.rank-1 .crown-icon {
       position: absolute;
       top: -6px;
       right: -6px;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.4));
     }
 
@@ -122,12 +156,6 @@
       font-size: 48px;
       font-weight: bold;
       color: #1B5E20;
-    }
-
-    .player-row.rank-1 .score-label {
-      font-size: 18px;
-      color: #2E7D32;
-      font-weight: 600;
     }
 
     /* RANK 2+ ROWS */
@@ -178,12 +206,12 @@
       font-size: 30px;
       font-weight: 600;
       color: #212121;
-      margin-bottom: 4px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
+    /* SCORES */
     .scores {
       display: flex;
       gap: 40px;
@@ -194,13 +222,6 @@
     .score-item {
       text-align: right;
       min-width: 80px;
-    }
-
-    .player-row .score-label {
-      font-size: 16px;
-      color: #757575;
-      font-weight: 500;
-      margin-bottom: 2px;
     }
 
     .player-row .score {
@@ -269,7 +290,7 @@
       border-top: 2px solid rgba(255, 255, 255, 0.4);
     }
 
-    .team-daily-loss {
+    .team-today-loss {
       font-size: 32px;
       font-weight: bold;
       color: white;
@@ -294,6 +315,19 @@
   </div>
 
   {{#if players}}
+    {{!-- COLUMN HEADERS --}}
+    <div class="column-headers">
+      <div class="column-headers-left"></div>
+      <div class="column-headers-right">
+        <div class="column-header-item">
+          <div class="column-header-label">Hôm nay</div>
+        </div>
+        <div class="column-header-item">
+          <div class="column-header-label">Vòng này</div>
+        </div>
+      </div>
+    </div>
+
     <div class="leaderboard">
       {{#each players}}
         {{#if (or (eq role "captain") is_captain)}}
@@ -308,7 +342,7 @@
             </div>
             <div class="captain-note-container">
               <div class="captain-note-label">Ghi chú từ đội trưởng</div>
-              <div class="captain-note-text">{{#if captain_note}}{{captain_note}}{{else}}Chúc mừng các chiến sĩ!{{/if}}</div>
+              <div class="captain-note-text">{{#if captain_note}}{{captain_note}}{{else}}--{{/if}}</div>
             </div>
           </div>
         {{else}}
@@ -319,9 +353,7 @@
             <div class="avatar-container">
               <img class="avatar" src="{{avatar}}" alt="{{name}}" onerror="this.src='https://via.placeholder.com/100?text=?'">
               {{#if @first}}
-                <svg class="crown-svg" viewBox="0 0 24 24" fill="#FFD700" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8L12 2Z"/>
-                </svg>
+                <img class="crown-icon" src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg" alt="crown">
               {{/if}}
             </div>
 
@@ -331,19 +363,24 @@
 
             <div class="scores">
               <div class="score-item">
-                <div class="score-label">Chặng này</div>
                 <div class="score">
-                  {{#if has_warning}}
+                  {{#if has_warning_today}}
                     <svg class="warning-icon" viewBox="0 0 24 24" fill="#FF9800" xmlns="http://www.w3.org/2000/svg">
                       <path d="M12 2L2 21h20L12 2zm0 6l6 10H6l6-10zm-1 7h2v2h-2v-2zm0-5h2v4h-2V10z"/>
                     </svg>
                   {{/if}}
-                  <span>{{daily_loss_display}}</span>
+                  <span>{{today_display}}</span>
                 </div>
               </div>
               <div class="score-item">
-                <div class="score-label">Tổng cộng</div>
-                <div class="score">{{total_loss_display}}</div>
+                <div class="score">
+                  {{#if has_warning_round}}
+                    <svg class="warning-icon" viewBox="0 0 24 24" fill="#FF9800" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2L2 21h20L12 2zm0 6l6 10H6l6-10zm-1 7h2v2h-2v-2zm0-5h2v4h-2V10z"/>
+                    </svg>
+                  {{/if}}
+                  <span>{{round_display}}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -352,7 +389,7 @@
     </div>
 
     <div class="footer">
-      <div class="team-daily-loss">Đội hôm nay giảm: {{team_daily_loss}} kg</div>
+      <div class="team-today-loss">Đội hôm nay giảm: {{team_today_loss_kg}} kg</div>
     </div>
   {{else}}
     <div class="empty-state">
