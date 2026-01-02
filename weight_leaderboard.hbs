@@ -13,16 +13,17 @@
 
     body {
       width: 1080px;
-      height: 1920px;
+      min-height: 1920px;
       font-family: 'Inter', system-ui, Arial, sans-serif;
       background: linear-gradient(to bottom, #14C7D5 0%, #4AA6D9 55%, #3B5BD6 100%);
-      overflow: hidden;
-      position: relative;
+      padding: 60px 60px 0 60px;
+      display: flex;
+      flex-direction: column;
     }
 
     .header {
       text-align: center;
-      padding-top: 60px;
+      margin-bottom: 30px;
     }
 
     .line1-small {
@@ -55,13 +56,11 @@
     }
 
     .col-labels {
-      position: absolute;
-      top: 440px;
-      width: 100%;
-      padding: 0 60px;
       display: flex;
       justify-content: flex-end;
       gap: 160px;
+      margin-bottom: 16px;
+      padding-right: 40px;
     }
 
     .col-label {
@@ -73,18 +72,14 @@
     }
 
     .leaderboard {
-      position: absolute;
-      top: 490px;
-      left: 60px;
-      width: 960px;
       display: flex;
       flex-direction: column;
       gap: 22px;
+      flex: 1;
     }
 
     .player-row {
-      position: relative;
-      width: 960px;
+      width: 100%;
       height: 132px;
       background: #E7E6FF;
       border-radius: 48px;
@@ -92,17 +87,17 @@
       display: flex;
       align-items: center;
       padding: 0 40px;
+      position: relative;
     }
 
     .player-row.winner {
       background: #7CF08A;
       border: 10px solid #FFFFFF;
       box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+      padding: 0 30px;
     }
 
     .avatar-oval {
-      position: absolute;
-      left: 40px;
       width: 140px;
       height: 100px;
       background: rgba(255, 255, 255, 0.55);
@@ -110,6 +105,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
     .avatar {
@@ -129,30 +125,22 @@
     }
 
     .player-name {
-      position: absolute;
-      left: 210px;
+      margin-left: 70px;
       font-size: 38px;
       font-weight: 600;
       color: #1F2A37;
-      max-width: 400px;
+      flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
     .value-container {
-      position: absolute;
       display: flex;
       align-items: center;
       gap: 14px;
-    }
-
-    .value-today-container {
-      right: 260px;
-    }
-
-    .value-round-container {
-      right: 100px;
+      width: 160px;
+      justify-content: flex-end;
     }
 
     .value-today {
@@ -172,6 +160,7 @@
     .warning-icon {
       width: 74px;
       height: 74px;
+      flex-shrink: 0;
     }
 
     .captain-text {
@@ -179,21 +168,18 @@
       font-weight: 600;
       color: rgba(0, 0, 0, 0.55);
       text-align: center;
-      position: absolute;
-      right: 180px;
-      width: 200px;
+      width: 160px;
     }
 
     .footer-bar {
-      position: absolute;
-      bottom: 0;
-      left: 0;
       width: 1080px;
       height: 220px;
       background: rgba(40, 76, 208, 0.55);
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-left: -60px;
+      margin-top: auto;
     }
 
     .footer-text {
@@ -230,6 +216,7 @@
           </div>
           <div class="player-name">{{name}}</div>
           <div class="captain-text">Đội Trưởng</div>
+          <div class="captain-text">Đội Trưởng</div>
         </div>
       {{else}}
         <!-- Player Row -->
@@ -245,7 +232,7 @@
           <div class="player-name">{{name}}</div>
 
           <!-- Today Value -->
-          <div class="value-container value-today-container">
+          <div class="value-container">
             {{#if has_warning_today}}
               <img src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/warning.svg" alt="Warning" class="warning-icon">
             {{/if}}
@@ -253,7 +240,7 @@
           </div>
 
           <!-- Round Value -->
-          <div class="value-container value-round-container">
+          <div class="value-container">
             <div class="value-round">{{round_display}}</div>
           </div>
         </div>
