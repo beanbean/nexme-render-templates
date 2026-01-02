@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=1080, height=1444">
-  <title>Team Leaderboard - {{team_name}}</title>
+  <title>Wellness Daily Score - Lap Finish Leaderboard</title>
   <style>
     * {
       margin: 0;
@@ -14,175 +14,252 @@
     body {
       width: 1080px;
       height: 1444px;
-      background: linear-gradient(180deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
-      color: white;
-      font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-      padding: 40px 30px;
+      background: linear-gradient(180deg, #00BCD4 0%, #2196F3 100%);
+      font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+      padding: 50px 40px;
       overflow: hidden;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 30px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+      margin-bottom: 40px;
     }
 
-    .team-name {
-      font-size: 52px;
+    .main-title {
+      font-size: 48px;
       font-weight: bold;
-      text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7);
-      margin-bottom: 12px;
-      letter-spacing: 1px;
+      color: white;
+      margin-bottom: 8px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .subtitle {
+      font-size: 36px;
+      font-weight: 600;
+      color: white;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .team-info {
       font-size: 28px;
-      color: #FFD700;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      color: rgba(255, 255, 255, 0.95);
+      font-weight: 500;
+    }
+
+    .leaderboard {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    /* RANK #1 - WINNER BANNER */
+    .player-row.rank-1 {
+      background: #00E676;
+      border: 5px solid white;
+      border-radius: 20px;
+      padding: 28px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      min-height: 140px;
+    }
+
+    .player-row.rank-1 .rank-badge {
+      width: 70px;
+      height: 70px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .player-row.rank-1 .avatar-container {
+      position: relative;
+    }
+
+    .player-row.rank-1 .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .player-row.rank-1 .crown {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      font-size: 40px;
+      filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.4));
+    }
+
+    .player-row.rank-1 .player-name {
+      font-size: 40px;
+      font-weight: bold;
+      color: #1B5E20;
+    }
+
+    .player-row.rank-1 .score {
+      font-size: 48px;
+      font-weight: bold;
+      color: #1B5E20;
+    }
+
+    .player-row.rank-1 .score-label {
+      font-size: 18px;
+      color: #2E7D32;
       font-weight: 600;
     }
 
-    .players-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .player-card {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border-radius: 18px;
+    /* RANK 2+ ROWS */
+    .player-row {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
       padding: 18px 20px;
       display: flex;
       align-items: center;
       gap: 18px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      transition: transform 0.2s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      min-height: 100px;
     }
 
-    .player-card:hover {
-      transform: translateX(5px);
-    }
-
-    .rank-container {
-      min-width: 70px;
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .rank-icon {
-      font-size: 44px;
-      line-height: 1;
-    }
-
-    .rank-number {
-      font-size: 38px;
-      font-weight: bold;
-      color: #FFD700;
-      background: rgba(0, 0, 0, 0.3);
-      width: 60px;
-      height: 60px;
+    .player-row .rank-badge {
+      width: 55px;
+      height: 55px;
+      background: #E0E0E0;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 3px solid rgba(255, 215, 0, 0.5);
+      font-size: 32px;
+      font-weight: bold;
+      color: #616161;
     }
 
-    .avatar {
-      width: 85px;
-      height: 85px;
+    .player-row .avatar-container {
+      position: relative;
+    }
+
+    .player-row .avatar {
+      width: 75px;
+      height: 75px;
       border-radius: 50%;
       object-fit: cover;
-      border: 3px solid rgba(255, 255, 255, 0.5);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      border: 3px solid #E0E0E0;
     }
 
     .player-info {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
     }
 
-    .player-name {
-      font-size: 32px;
+    .player-row .player-name {
+      font-size: 30px;
       font-weight: 600;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+      color: #212121;
+      margin-bottom: 4px;
+    }
+
+    .scores {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .score-item {
+      text-align: right;
+    }
+
+    .player-row .score-label {
+      font-size: 16px;
+      color: #757575;
+      font-weight: 500;
       margin-bottom: 2px;
     }
 
-    .stats {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 22px;
-    }
-
-    .trend-icon {
-      font-size: 28px;
-    }
-
-    .weight-value {
+    .player-row .score {
+      font-size: 32px;
       font-weight: bold;
-      color: #FFD700;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      color: #424242;
     }
 
-    .warning {
-      font-size: 24px;
-      margin-left: 4px;
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 2px solid rgba(255, 255, 255, 0.4);
     }
 
-    .total-loss {
-      color: #E0E0E0;
-      font-size: 20px;
+    .team-stars {
+      font-size: 32px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .empty-state {
       text-align: center;
-      padding: 60px 30px;
-      font-size: 28px;
-      color: rgba(255, 255, 255, 0.7);
+      padding: 80px 40px;
+      font-size: 32px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
   <div class="header">
-    <div class="team-name">{{team_name}}</div>
-    <div class="subtitle">🏆 Bảng Xếp Hạng Ngày {{day}}</div>
+    <div class="main-title">Wellness Daily Score</div>
+    <div class="subtitle">LAP FINISH LEADERBOARD</div>
+    <div class="team-info">Team {{team_name}}, Lap {{lap_number}}</div>
   </div>
 
   {{#if players}}
-    <div class="players-list">
+    <div class="leaderboard">
       {{#each players}}
-        <div class="player-card">
-          <div class="rank-container">
-            <div class="rank-icon">{{{rank_icon}}}</div>
-          </div>
+        <div class="player-row {{#if @first}}rank-1{{/if}}">
+          <div class="rank-badge">{{rank}}</div>
 
-          <img class="avatar" src="{{avatar}}" alt="{{name}}" onerror="this.src='https://via.placeholder.com/85?text=?'">
+          <div class="avatar-container">
+            <img class="avatar" src="{{avatar}}" alt="{{name}}" onerror="this.src='https://via.placeholder.com/100?text=?'">
+            {{#if @first}}
+              <div class="crown">👑</div>
+            {{/if}}
+          </div>
 
           <div class="player-info">
             <div class="player-name">{{name}}</div>
-            <div class="stats">
-              <span class="trend-icon">{{{trend}}}</span>
-              <span class="weight-value">{{daily_loss_display}} kg</span>
-              {{#if warning}}
-                <span class="warning">{{{warning}}}</span>
-              {{/if}}
-              <span class="total-loss">• Tổng: {{total_loss_display}} kg</span>
+          </div>
+
+          <div class="scores">
+            <div class="score-item">
+              <div class="score-label">This Lap</div>
+              <div class="score">{{daily_loss}}</div>
+            </div>
+            <div class="score-item">
+              <div class="score-label">Total</div>
+              <div class="score">{{total_loss}}</div>
             </div>
           </div>
         </div>
       {{/each}}
     </div>
+
+    <div class="footer">
+      <div class="team-stars">Team stars for this Lap: {{team_stars}} ⭐</div>
+    </div>
   {{else}}
     <div class="empty-state">
-      Chưa có dữ liệu xếp hạng cho ngày này
+      No leaderboard data available for this lap
     </div>
   {{/if}}
 </body>
