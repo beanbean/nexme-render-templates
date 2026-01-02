@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, height=1444">
+  <title>Team Leaderboard - {{team_name}}</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1080px;
+      height: 1444px;
+      background: linear-gradient(180deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+      color: white;
+      font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      padding: 40px 30px;
+      overflow: hidden;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .team-name {
+      font-size: 52px;
+      font-weight: bold;
+      text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7);
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      font-size: 28px;
+      color: #FFD700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      font-weight: 600;
+    }
+
+    .players-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .player-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .player-card:hover {
+      transform: translateX(5px);
+    }
+
+    .rank-container {
+      min-width: 70px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .rank-icon {
+      font-size: 44px;
+      line-height: 1;
+    }
+
+    .rank-number {
+      font-size: 38px;
+      font-weight: bold;
+      color: #FFD700;
+      background: rgba(0, 0, 0, 0.3);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid rgba(255, 215, 0, 0.5);
+    }
+
+    .avatar {
+      width: 85px;
+      height: 85px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .player-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .player-name {
+      font-size: 32px;
+      font-weight: 600;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+      margin-bottom: 2px;
+    }
+
+    .stats {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+    }
+
+    .trend-icon {
+      font-size: 28px;
+    }
+
+    .weight-value {
+      font-weight: bold;
+      color: #FFD700;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .warning {
+      font-size: 24px;
+      margin-left: 4px;
+    }
+
+    .total-loss {
+      color: #E0E0E0;
+      font-size: 20px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 30px;
+      font-size: 28px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="team-name">{{team_name}}</div>
+    <div class="subtitle">🏆 Bảng Xếp Hạng Ngày {{day}}</div>
+  </div>
+
+  {{#if players}}
+    <div class="players-list">
+      {{#each players}}
+        <div class="player-card">
+          <div class="rank-container">
+            <div class="rank-icon">{{{rank_icon}}}</div>
+          </div>
+
+          <img class="avatar" src="{{avatar}}" alt="{{name}}" onerror="this.src='https://via.placeholder.com/85?text=?'">
+
+          <div class="player-info">
+            <div class="player-name">{{name}}</div>
+            <div class="stats">
+              <span class="trend-icon">{{{trend}}}</span>
+              <span class="weight-value">{{daily_loss_display}} kg</span>
+              {{#if warning}}
+                <span class="warning">{{{warning}}}</span>
+              {{/if}}
+              <span class="total-loss">• Tổng: {{total_loss_display}} kg</span>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <div class="empty-state">
+      Chưa có dữ liệu xếp hạng cho ngày này
+    </div>
+  {{/if}}
+</body>
+</html>
