@@ -106,6 +106,7 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      position: relative;
     }
 
     .avatar {
@@ -117,9 +118,6 @@
     }
 
     .crown-icon {
-      position: absolute;
-      top: 12px;
-      left: 195px;
       width: 78px;
       height: 78px;
     }
@@ -220,14 +218,14 @@
         </div>
       {{else}}
         <!-- Player Row -->
+        {{#if (eq rank "1")}}
+          <img src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg" alt="Crown" class="crown-icon" style="margin-left: 195px; margin-bottom: -78px;">
+        {{/if}}
+
         <div class="player-row {{#if (eq rank "1")}}winner{{/if}}">
           <div class="avatar-oval">
             <img src="{{avatar}}" alt="{{name}}" class="avatar" onerror="this.src='https://via.placeholder.com/78?text=?'">
           </div>
-
-          {{#if (eq rank "1")}}
-            <img src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg" alt="Crown" class="crown-icon">
-          {{/if}}
 
           <div class="player-name">{{name}}</div>
 
