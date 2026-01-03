@@ -152,15 +152,26 @@
     }
 
     /* 🔧 VƯƠNG MIỆN – CANH THẲNG TRỤC AVATAR */
-    .crown-icon {
-      width: 90px;
-      height: 90px;
-      position: absolute;
-      top: -58px;
-      left: 50%;
-  transform: translateX(-50%);            /* canh giữa avatar */
-      z-index: 20;
-    }
+  /* 1. Class của cái hộp bao quanh Avatar */
+.avatar-container {
+    position: relative;  /* <--- DÒNG NÀY QUAN TRỌNG NHẤT */
+    width: 120px;        /* Ví dụ chiều rộng của khung avatar */
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 2. Class của Vương miện (Code cũ của bạn giữ nguyên) */
+.crown-icon {
+    width: 90px;
+    height: 90px;
+    position: absolute;
+    top: -58px;          /* Điều chỉnh độ cao cho vừa ý */
+    left: 50%;
+    transform: translateX(-50%); /* Căn giữa so với .avatar-container */
+    z-index: 20;
+}
 
     /* ================= FOOTER ================= */
     .footer-bar {
