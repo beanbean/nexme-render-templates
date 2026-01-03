@@ -56,7 +56,7 @@
     .col-labels {
       display: flex;
       justify-content: flex-end;
-      gap: 120px; /* 🔧 dịch "Hôm nay" sang phải ~0.5cm */
+      gap: 38px;                 /* 🔧 Hôm nay ↔ Vòng này cách ~1cm */
       margin: 14px 0;
       padding-right: 40px;
     }
@@ -73,12 +73,12 @@
     .leaderboard {
       display: flex;
       flex-direction: column;
-      gap: 18px; /* 🔧 tăng gap ~5% */
+      gap: 18px;
       flex: 1;
     }
 
     .player-row {
-      height: 116px; /* 🔧 tăng từ 110 → +5% */
+      height: 122px;             /* 🔧 +5% chiều cao */
       background: #E7E6FF;
       border-radius: 42px;
       box-shadow: 0 5px 14px rgba(0,0,0,0.18);
@@ -151,21 +151,27 @@
       color: rgba(31,42,55,0.7);
     }
 
+    /* 🔧 VƯƠNG MIỆN – CANH THẲNG TRỤC AVATAR */
     .crown-icon {
       width: 66px;
       height: 66px;
       position: absolute;
-      top: -64px;
-      left: 176px;
-      z-index: 10;
+      top: -58px;
+      left: 64px;               /* canh giữa avatar */
+      z-index: 20;
     }
 
     /* ================= FOOTER ================= */
     .footer-bar {
       height: 176px;
-      background: rgba(40,76,208,0.55);
-      margin-left: -60px;   /* 🔧 tràn full ngang */
-      margin-right: -60px;  /* 🔧 FIX quan trọng */
+      background: linear-gradient(
+        to right,
+        #6A1B9A,
+        #7B1FA2,
+        #6A1B9A
+      );                          /* 🔧 nền tím đồng bộ */
+      margin-left: -60px;
+      margin-right: -60px;        /* 🔧 full chiều ngang ảnh */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -218,8 +224,10 @@
             <div class="value-round">{{round_display}}</div>
           </div>
           {{#if (eq rank "1")}}
-            <img src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg"
-                 class="crown-icon">
+            <img
+              src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg"
+              class="crown-icon"
+            >
           {{/if}}
         </div>
       {{/if}}
