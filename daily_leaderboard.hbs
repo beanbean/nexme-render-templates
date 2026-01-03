@@ -13,7 +13,7 @@
       height: 1920px;
       font-family: 'Inter', system-ui, Arial, sans-serif;
       background: linear-gradient(to bottom, #9C27B0 0%, #7B1FA2 55%, #4A148C 100%);
-      padding: 48px 60px 0 60px; /* 🔧 giảm top padding */
+      padding: 48px 60px 0 60px;
       display: flex;
       flex-direction: column;
     }
@@ -21,18 +21,18 @@
     /* ================= HEADER ================= */
     .header {
       text-align: center;
-      margin-bottom: 22px; /* 🔧 */
+      margin-bottom: 22px;
     }
 
     .line1-small {
-      font-size: 28px;   /* 🔧 */
+      font-size: 28px;
       font-weight: 600;
       color: #FFFFFF;
       margin-bottom: 6px;
     }
 
     .title-big {
-      font-size: 74px;   /* 🔧 */
+      font-size: 74px;
       font-weight: 800;
       color: #FFFFFF;
       margin-bottom: 18px;
@@ -40,29 +40,29 @@
     }
 
     .team-name {
-      font-size: 44px;   /* 🔧 */
+      font-size: 44px;
       font-weight: 700;
       color: #FFFFFF;
       margin-bottom: 10px;
     }
 
     .meta {
-      font-size: 28px;   /* 🔧 */
+      font-size: 28px;
       font-weight: 500;
       color: rgba(255,255,255,0.85);
     }
 
-    /* ================= COLUMN LABEL ================= */
+    /* ================= COLUMN LABELS ================= */
     .col-labels {
       display: flex;
       justify-content: flex-end;
-      gap: 140px;        /* 🔧 */
-      margin: 12px 0;
+      gap: 120px; /* 🔧 dịch "Hôm nay" sang phải ~0.5cm */
+      margin: 14px 0;
       padding-right: 40px;
     }
 
     .col-label {
-      font-size: 28px;   /* 🔧 */
+      font-size: 28px;
       font-weight: 700;
       color: #FFFFFF;
       width: 140px;
@@ -73,12 +73,12 @@
     .leaderboard {
       display: flex;
       flex-direction: column;
-      gap: 14px;         /* 🔧 giảm gap */
+      gap: 18px; /* 🔧 tăng gap ~5% */
       flex: 1;
     }
 
     .player-row {
-      height: 110px;     /* 🔧 giảm từ 132 */
+      height: 116px; /* 🔧 tăng từ 110 → +5% */
       background: #E7E6FF;
       border-radius: 42px;
       box-shadow: 0 5px 14px rgba(0,0,0,0.18);
@@ -95,7 +95,7 @@
     }
 
     .avatar-oval {
-      width: 168px;      /* 🔧 */
+      width: 168px;
       height: 124px;
       background: rgba(255,255,255,0.55);
       border-radius: 52px;
@@ -115,8 +115,8 @@
     }
 
     .player-name {
-      margin-left: 52px; /* 🔧 */
-      font-size: 34px;   /* 🔧 */
+      margin-left: 52px;
+      font-size: 34px;
       font-weight: 600;
       color: #1F2A37;
       flex: 1;
@@ -134,7 +134,7 @@
     }
 
     .value-today {
-      font-size: 44px;   /* 🔧 */
+      font-size: 44px;
       font-weight: 800;
       color: #FF7A00;
     }
@@ -162,16 +162,17 @@
 
     /* ================= FOOTER ================= */
     .footer-bar {
-      height: 176px;     /* 🔧 giảm từ 220 */
+      height: 176px;
       background: rgba(40,76,208,0.55);
-      margin-left: -60px;
+      margin-left: -60px;   /* 🔧 tràn full ngang */
+      margin-right: -60px;  /* 🔧 FIX quan trọng */
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .footer-text {
-      font-size: 54px;   /* 🔧 */
+      font-size: 54px;
       font-weight: 800;
       color: #FFFFFF;
     }
