@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Daily Leaderboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      background: #0f172a;
+    }
+
+    /* ===============================
+       CANVAS
+    =============================== */
+    .canvas {
+      width: 1080px;
+      height: 1920px;
+      margin: 0 auto;
+      background: linear-gradient(180deg, #020617 0%, #020617 100%);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ===============================
+       HEADER
+    =============================== */
+    .header {
+      height: 420px;
+      flex-shrink: 0;
+      padding: 48px 64px;
+      background: radial-gradient(1200px 600px at top, #1e293b 0%, #020617 60%);
+    }
+
+    .team-name {
+      font-size: 56px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .round-info {
+      font-size: 28px;
+      opacity: 0.85;
+    }
+
+    .lap-info {
+      margin-top: 32px;
+      font-size: 32px;
+      font-weight: 600;
+    }
+
+    /* ===============================
+       BODY
+    =============================== */
+    .body {
+      height: calc(1920px - 420px - 280px);
+      padding: 32px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+    }
+
+    .player-row {
+      height: 96px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+    }
+
+    .player-row.captain {
+      height: 104px;
+      background: linear-gradient(
+        90deg,
+        rgba(250, 204, 21, 0.25),
+        rgba(250, 204, 21, 0.08)
+      );
+      border: 1px solid rgba(250, 204, 21, 0.5);
+    }
+
+    .rank {
+      width: 80px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 20px;
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .player-name {
+      flex: 1;
+      font-size: 30px;
+      font-weight: 600;
+    }
+
+    .score {
+      width: 140px;
+      text-align: right;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .score.total {
+      opacity: 0.8;
+      font-size: 24px;
+    }
+
+    /* ===============================
+       FOOTER
+    =============================== */
+    .footer {
+      height: 280px;
+      flex-shrink: 0;
+      padding: 40px 64px;
+      background: linear-gradient(180deg, rgba(2,6,23,0) 0%, #020617 60%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .summary-title {
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    .summary-text {
+      font-size: 26px;
+      opacity: 0.85;
+      line-height: 1.4;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="canvas">
+
+    <!-- ===============================
+         HEADER
+    =============================== -->
+    <div class="header">
+      <div class="team-name">{{team_name}}</div>
+      <div class="round-info">{{round_range}}</div>
+      <div class="lap-info">Hôm nay · Ngày {{lap_number}}</div>
+    </div>
+
+    <!-- ===============================
+         BODY
+    =============================== -->
+    <div class="body">
+      {{#each players}}
+        <div class="player-row {{#if is_captain}}captain{{/if}}">
+          <div class="rank">
+            {{#if is_captain}}👑{{else}}{{rank}}{{/if}}
+          </div>
+
+          <img class="avatar" src="{{avatar}}" />
+
+          <div class="player-name">
+            {{name}}
+            {{#if is_captain}} · Đội Trưởng{{/if}}
+          </div>
+
+          <div class="score">
+            {{daily_loss}}
+          </div>
+
+          <div class="score total">
+            {{total_loss}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+
+    <!-- ===============================
+         FOOTER
+    =============================== -->
+    <div class="footer">
+      <div class="summary-title">Tổng kết hôm nay</div>
+      <div class="summary-text">
+        Cả đội đã nỗ lực rất tốt 💪  
+        Tiếp tục duy trì thói quen và cùng nhau về đích!
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
