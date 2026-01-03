@@ -56,7 +56,7 @@
     .col-labels {
       display: flex;
       justify-content: flex-end;
-      gap: 38px;                 /* 🔧 Hôm nay ↔ Vòng này cách ~1cm */
+      gap: 38px;
       margin: 14px 0;
       padding-right: 40px;
     }
@@ -78,7 +78,7 @@
     }
 
     .player-row {
-      height: 122px;             /* 🔧 +5% chiều cao */
+      height: 122px;
       background: #E7E6FF;
       border-radius: 42px;
       box-shadow: 0 5px 14px rgba(0,0,0,0.18);
@@ -94,6 +94,7 @@
       padding: 0 28px;
     }
 
+    /* KHUNG AVATAR - Cần position: relative để neo vương miện */
     .avatar-oval {
       width: 168px;
       height: 124px;
@@ -103,7 +104,7 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      position: relative;
+      position: relative; /* QUAN TRỌNG: Để vương miện căn theo khung này */
     }
 
     .avatar {
@@ -112,6 +113,19 @@
       border-radius: 50%;
       object-fit: cover;
       border: 4px solid rgba(255,255,255,0.7);
+    }
+
+    /* CSS VƯƠNG MIỆN */
+    .crown-icon {
+      width: 90px;
+      height: 90px;
+      position: absolute;
+      /* Đẩy lên trên đầu avatar */
+      top: -58px;
+      /* Căn giữa theo chiều ngang của .avatar-oval */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
     }
 
     .player-name {
@@ -151,28 +165,6 @@
       color: rgba(31,42,55,0.7);
     }
 
-    /* 🔧 VƯƠNG MIỆN – CANH THẲNG TRỤC AVATAR */
-  /* 1. Class của cái hộp bao quanh Avatar */
-.avatar-container {
-    position: relative;  /* <--- DÒNG NÀY QUAN TRỌNG NHẤT */
-    width: 120px;        /* Ví dụ chiều rộng của khung avatar */
-    height: 120px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* 2. Class của Vương miện (Code cũ của bạn giữ nguyên) */
-.crown-icon {
-    width: 90px;
-    height: 90px;
-    position: absolute;
-    top: -58px;          /* Điều chỉnh độ cao cho vừa ý */
-    left: 50%;
-    transform: translateX(-50%); /* Căn giữa so với .avatar-container */
-    z-index: 20;
-}
-
     /* ================= FOOTER ================= */
     .footer-bar {
       height: 176px;
@@ -181,9 +173,9 @@
         #6A1B9A,
         #7B1FA2,
         #6A1B9A
-      );                          /* 🔧 nền tím đồng bộ */
+      );
       margin-left: -60px;
-      margin-right: -60px;        /* 🔧 full chiều ngang ảnh */
+      margin-right: -60px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -214,6 +206,7 @@
   <div class="leaderboard">
     {{#each players}}
       {{#if is_captain}}
+        <!-- ĐỘI TRƯỞNG -->
         <div class="player-row">
           <div class="avatar-oval">
             <img src="{{avatar}}" class="avatar">
@@ -224,23 +217,30 @@
           </div>
         </div>
       {{else}}
+        <!-- THÀNH VIÊN -->
         <div class="player-row {{#if (eq rank "1")}}winner{{/if}}">
+          
+          <!-- KHUNG AVATAR (Chứa cả ảnh và vương miện) -->
           <div class="avatar-oval">
+            {{#if (eq rank "1")}}
+              <img
+                src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg"
+                class="crown-icon"
+              >
+            {{/if}}
             <img src="{{avatar}}" class="avatar">
           </div>
+
           <div class="player-name">{{name}}</div>
+          
           <div class="value-container">
             <div class="value-today">{{today_display}}</div>
           </div>
+          
           <div class="value-container">
             <div class="value-round">{{round_display}}</div>
           </div>
-          {{#if (eq rank "1")}}
-            <img
-              src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg"
-              class="crown-icon"
-            >
-          {{/if}}
+          
         </div>
       {{/if}}
     {{/each}}
@@ -248,9 +248,8 @@
 
   <div class="footer-bar">
     <div class="footer-text">
-  Đội hôm nay giảm: {{#if team_today_loss}}{{team_today_loss}}{{else}}0{{/if}}kg
-</div>
-
+      Đội hôm nay giảm: {{#if team_today_loss}}{{team_today_loss}}{{else}}0{{/if}}kg
+    </div>
   </div>
 
 </body>
