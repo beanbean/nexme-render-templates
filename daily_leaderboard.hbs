@@ -217,34 +217,32 @@
           </div>
         </div>
       {{else}}
-        <!-- THÀNH VIÊN -->
-        <div class="player-row {{#if (eq rank "1")}}winner{{/if}}">
-          
-          <!-- KHUNG AVATAR (Chứa cả ảnh và vương miện) -->
-          <div class="avatar-oval">
-            {{#if (eq rank "1")}}
-              <img
-                src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg"
-                class="crown-icon"
-              >
-            {{/if}}
-            <img src="{{avatar}}" class="avatar">
-          </div>
-
-          <div class="player-name">{{name}}</div>
-          
-          <div class="value-container">
-            <div class="value-today">{{today_display}}</div>
-          </div>
-          
-          <div class="value-container">
-            <div class="value-round">{{round_display}}</div>
-          </div>
-          
-        </div>
-      {{/if}}
-    {{/each}}
+      <!-- THÀNH VIÊN -->
+<div class="player-row {{#if is_top}}winner{{/if}}">
+  
+  <!-- KHUNG AVATAR (Chứa cả ảnh và vương miện) -->
+  <div class="avatar-oval">
+    {{#if is_top}}
+      <img
+        src="https://raw.githubusercontent.com/beanbean/nexme-render-templates/main/crown.svg"
+        class="crown-icon"
+      >
+    {{/if}}
+    <img src="{{avatar}}" class="avatar">
   </div>
+
+  <div class="player-name">{{name}}</div>
+  
+  <div class="value-container">
+    <div class="value-today">{{today_display}}</div>
+  </div>
+  
+  <div class="value-container">
+    <div class="value-round">{{round_display}}</div>
+  </div>
+  
+</div>
+
 
   <div class="footer-bar">
     <div class="footer-text">
