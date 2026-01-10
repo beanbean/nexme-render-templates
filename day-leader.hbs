@@ -226,8 +226,8 @@
 </head>
 <body>
   <div class="header">
-    <div class="header-label">Marathon Wellness</div>
-    <div class="header-title">Day Leader</div>
+    <div class="header-label">Marathon Sức Khỏe</div>
+    <div class="header-title">Thủ Lĩnh Ngày</div>
   </div>
 
   <!-- Achievement Badge -->
@@ -256,15 +256,15 @@
     <div class="stats-grid">
       <div class="stat-box">
         <div class="stat-value">{{formatWeight weight}}kg</div>
-        <div class="stat-label">Current Weight</div>
+        <div class="stat-label">Cân nặng</div>
       </div>
       <div class="stat-box highlight">
         <div class="stat-value">{{formatDelta delta}}</div>
-        <div class="stat-label">Today's Change</div>
+        <div class="stat-label">Thay đổi hôm nay</div>
       </div>
       <div class="stat-box">
         <div class="stat-value">{{streak}}</div>
-        <div class="stat-label">Day Streak</div>
+        <div class="stat-label">Chuỗi ngày</div>
       </div>
     </div>
 
@@ -272,28 +272,28 @@
     <div class="team-context">
       <div class="context-item">
         <div class="context-value">{{team}}</div>
-        <div class="context-label">Team</div>
+        <div class="context-label">Đội</div>
       </div>
       <div class="context-divider"></div>
       <div class="context-item">
-        <div class="context-value">Lap {{lap}}</div>
-        <div class="context-label">Current Lap</div>
+        <div class="context-value">Vòng {{lap}}</div>
+        <div class="context-label">Hiện tại</div>
       </div>
       <div class="context-divider"></div>
       <div class="context-item">
-        <div class="context-value">Day {{day}}</div>
-        <div class="context-label">of 10</div>
+        <div class="context-value">Ngày {{day}}</div>
+        <div class="context-label">trên 10</div>
       </div>
       <div class="context-divider"></div>
       <div class="context-item">
         <div class="context-value">{{vp}} VP</div>
-        <div class="context-label">Points</div>
+        <div class="context-label">Điểm</div>
       </div>
     </div>
   </div>
 
   <div class="footer">
-    {{default achievement_text "Congratulations on leading today!"}}
+    {{default achievement_text "Chúc mừng bạn đã dẫn đầu ngày hôm nay!"}}
   </div>
 </body>
 </html>

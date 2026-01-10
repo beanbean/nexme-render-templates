@@ -231,19 +231,19 @@
 </head>
 <body>
   <div class="header">
-    <div class="header-label">Marathon Wellness</div>
-    <div class="header-title">TEAM LEADERBOARD</div>
+    <div class="header-label">Marathon Sức Khỏe</div>
+    <div class="header-title">BẢNG XẾP HẠNG ĐỘI</div>
     <div class="lap-info">
-      <span>Lap {{lap}}</span>
+      <span>Vòng {{lap}}</span>
       <span>•</span>
-      <span>Day {{day}}/10</span>
+      <span>Ngày {{day}}/10</span>
     </div>
   </div>
 
   <!-- Lap Progress Bar -->
   <div class="progress-wrap">
     <div class="progress-header">
-      <span class="progress-label">Lap Progress</span>
+      <span class="progress-label">Tiến độ vòng</span>
       <span class="progress-value">{{lap_progress}}%</span>
     </div>
     <div class="progress-bar">
@@ -253,7 +253,7 @@
 
   <!-- Team Rankings -->
   <div class="rankings">
-    <div class="rankings-title">Team Rankings by VP</div>
+    <div class="rankings-title">Xếp hạng theo điểm VP</div>
 
     {{#each teams}}
     <div class="team-row {{#if (eq @index 0)}}rank-1{{else if (eq @index 1)}}rank-2{{else if (eq @index 2)}}rank-3{{else}}rank-other{{/if}}">
@@ -261,7 +261,7 @@
 
       <div class="team-info">
         <div class="team-name">{{name}}</div>
-        <div class="team-captain">Captain: {{captain}}</div>
+        <div class="team-captain">Đội trưởng: {{captain}}</div>
       </div>
 
       <div class="member-avatars">
@@ -288,7 +288,7 @@
   </div>
 
   <div class="footer">
-    Updated: {{updated_at}}
+    Cập nhật: {{updated_at}}
   </div>
 </body>
 </html>
