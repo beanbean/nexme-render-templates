@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
+    
+    body {
+      margin: 0; padding: 0;
+      font-family: 'Roboto', sans-serif;
+      background: #e0e5ec;
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .card {
+      width: 1080px; height: 1350px;
+      background: #e0e5ec;
+      position: relative;
+      overflow: hidden;
+      padding: 60px;
+      box-sizing: border-box;
+    }
+
+    /* Header */
+    .header { text-align: right; margin-bottom: 40px; color: #5a6b7c; }
+    .header h2 { margin: 0; font-size: 32px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;}
+    .header span { font-size: 24px; font-weight: 400; }
+    .status-badge { 
+      background: #76c043; color: white; padding: 5px 15px; 
+      border-radius: 20px; font-size: 18px; font-weight: bold; vertical-align: middle;
+      margin-left: 10px;
+    }
+
+    /* Profile Section */
+    .profile { display: flex; align-items: center; margin-bottom: 50px; }
+    .avatar {
+      width: 160px; height: 160px; border-radius: 50%;
+      border: 6px solid #e0e5ec;
+      box-shadow: 9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255, 0.5);
+      object-fit: cover; margin-right: 40px;
+    }
+    .profile-info h1 { font-size: 56px; margin: 0 0 10px 0; color: #333; font-weight: 900; }
+    .profile-info p { font-size: 32px; margin: 5px 0; color: #666; font-weight: 500;}
+
+    /* Divider */
+    .divider { height: 4px; background: #76c043; border-radius: 3px; margin-bottom: 60px; width: 100%; opacity: 0.8; }
+
+    /* Top Stats (Start - Finish - Result) */
+    .stats-row { display: flex; justify-content: space-between; margin-bottom: 60px; gap: 40px; }
+    .stat-box {
+      flex: 1; padding: 30px; text-align: center;
+      border-radius: 30px;
+      background: #e0e5ec;
+      box-shadow: 12px 12px 24px rgb(163,177,198,0.6), -12px -12px 24px rgba(255,255,255, 0.5);
+    }
+    .stat-val { font-size: 70px; font-weight: 900; display: block; margin-bottom: 10px; }
+    .stat-label { font-size: 28px; color: #777; text-transform: uppercase; letter-spacing: 1px;}
+    
+    /* Colors */
+    .text-orange { color: #e95420; }
+    .text-green { color: #76c043; }
+    .text-gray { color: #555; }
+
+    /* Grid 10 Days */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+    .day-card {
+      height: 200px;
+      border-radius: 20px;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      position: relative;
+      box-shadow: inset 6px 6px 12px #b8b9be, inset -6px -6px 12px #ffffff; /* Neumorphism chìm */
+      background: #e0e5ec;
+    }
+    
+    /* Status Styles */
+    .day-card.gain { 
+      background: #e95420; color: white; 
+      box-shadow: 10px 10px 20px rgb(163,177,198,0.6); 
+      border: none; 
+    }
+    .day-card.loss { 
+      background: #76c043; color: white; 
+      box-shadow: 10px 10px 20px rgb(163,177,198,0.6); 
+      border: none; 
+    }
+    .day-card.empty { color: #aaa; }
+    .day-card.flat { color: #555; }
+
+    .day-val { font-size: 48px; font-weight: bold; z-index: 2; }
+    .day-label { 
+      position: absolute; bottom: 15px; 
+      font-size: 20px; 
+      padding: 4px 12px; border-radius: 10px;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    .gain .day-label, .loss .day-label { background: rgba(255,255,255,0.2); }
+    .empty .day-label, .flat .day-label { color: #888; }
+
+    /* Footer */
+    .footer { text-align: center; margin-top: 50px; }
+    .footer-text { font-size: 32px; color: #555; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px;}
+    .footer-val-box {
+      display: inline-block; padding: 25px 80px;
+      border-radius: 25px; background: #e0e5ec;
+      box-shadow: 9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255, 0.5);
+    }
+    .footer-val { font-size: 60px; font-weight: 900; color: #e95420; }
+
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <h2>WEIGHT LOSS MARATHON <span class="status-badge">ON</span></h2>
+      <span>personal progress</span>
+    </div>
+
+    <div class="profile">
+      <!-- Fallback Avatar nếu không có ảnh -->
+      {{#if player.avatar}}
+        <img src="{{player.avatar}}" class="avatar" />
+      {{else}}
+        <img src="https://ui-avatars.com/api/?name={{player.name}}&background=random&size=256" class="avatar" />
+      {{/if}}
+      
+      <div class="profile-info">
+        <h1>{{player.name}}</h1>
+        <p>{{player.team}}</p>
+        <p>{{player.date}}</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <span class="stat-val text-orange">{{stats.start}}</span>
+        <span class="stat-label">Start</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val text-green">{{stats.finish}}</span>
+        <span class="stat-label">Current</span>
+      </div>
+      <div class="stat-box">
+        <!-- Result: Nếu số âm thì hiện màu xanh, dương màu cam -->
+        <span class="stat-val {{#if (lt stats.result 0)}}text-green{{else}}text-orange{{/if}}">
+          {{stats.result}}
+        </span>
+        <span class="stat-label">Result</span>
+      </div>
+    </div>
+
+    <div class="grid-container">
+      {{#each days}}
+        <div class="day-card {{status}}">
+          {{#if value_g}}
+            <span class="day-val">
+              {{#if (gt value_g 0)}}+{{/if}}{{value_g}}
+            </span>
+          {{else}}
+            <span class="day-val">{{#if (eq status 'flat')}}-{{else}}?{{/if}}</span>
+          {{/if}}
+          <span class="day-label">{{label}}</span>
+        </div>
+      {{/each}}
+    </div>
+
+    <div class="footer">
+      <div class="footer-text">WEIGHT CHANGE IN THIS LAP:</div>
+      <div class="footer-val-box">
+        <span class="footer-val">{{stats.result}} kg</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
